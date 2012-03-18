@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 
 times = 1000000
-fact_21 = 51090942171709440000
+fact_16 = 20922789888000
 
 def fact(n):
     if n == 1:
@@ -11,6 +11,6 @@ def fact(n):
 
 ok = True
 for i in xrange(times):
-    ok = ok and fact(21) == fact_21
+    ok = ok and fact(16) == fact_16
 
-print "finish (%i): %s" % (times, 'ok' if ok else 'fail')
+print "python finish %i - %s" % (times, 'ok' if ok else 'fail')

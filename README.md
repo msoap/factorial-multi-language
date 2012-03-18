@@ -14,23 +14,26 @@
     Память: 4 ГБ
     Частота шины: 1,07 ГГц
 
-perl (v5.12.3)
+perl (5.12.3)
 --------------
 
     time ./fact.pl
-    finish (1000000): ok
-    ./fact.pl  11.74s user 0.01s system 99% cpu 11.751 total
+    perl finish 1000000 - ok
 
 python (2.7.1)
 --------------
 
-    time ./fact.py
-    finish (1000000): ok
-    ./fact.py  6.89s user 0.02s system 99% cpu 6.908 total
+    python finish 1000000 - ok
+    ./fact.py  4.91s user 0.02s system 98% cpu 5.009 total
 
 Javascript (node.js 0.6.13)
 ---------------------------
 
-    time ./fact.js
-    finish (10000000): ok
-    ./fact.js  3.08s user 0.02s system 100% cpu 3.108 total
+    node.js finish 50000000 - ok
+    ./fact.js  11.14s user 0.05s system 99% cpu 11.229 total
+
+Lua (5.1.4)
+-----------
+
+    lua finish 10000000 - ok
+    ./fact.lua  21.98s user 0.01s system 99% cpu 22.000 total

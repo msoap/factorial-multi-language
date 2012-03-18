@@ -6,7 +6,7 @@ use strict;
 use warnings;
 
 my $times = 1_000_000;
-my $fact_21 = 51090942171709440000;
+my $fact_16 = 20922789888000;
 
 # ------------------------------------------------------------------------------
 sub fact {
@@ -16,5 +16,5 @@ sub fact {
 }
 
 my $ok = 1;
-$ok &&= fact(21) == $fact_21 for 1 .. $times;
-say "finish ($times): " . ($ok ? 'ok' : 'failed');
+$ok &&= fact(16) == $fact_16 for 1 .. $times;
+say "perl finish $times - " . ($ok ? 'ok' : 'failed');

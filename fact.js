@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 "use strict";
 
-var times = 10000000;
-var fact_21 = 51090942171709440000;
+var times = 50000000;
+var fact_16 = 20922789888000;
 
 function fact(n) {
     if (n == 1)
@@ -12,7 +12,7 @@ function fact(n) {
 
 var ok = true;
 for (var i = 0; i < times; i++) {
-    ok = ok && fact(21) == fact_21;
+    ok = ok && fact(16) == fact_16;
 };
 
-console.log('finish (' + times + '): '+ (ok ? 'ok' : 'failed'));
+console.log('node.js finish ' + times + ' - '+ (ok ? 'ok' : 'failed'));
