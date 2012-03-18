@@ -17,6 +17,7 @@ our %special = (
         after => 'rm fact_c',
     },
     'fact-jsc.js' => {
+        # ln -s /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc ~/bin/
         instead => 'jsc fact-jsc.js'
     }
 );
