@@ -69,7 +69,7 @@ sub create_report {
     die "$report_data is not valid" if $@;
     close $FH;
 
-    # withot fasters languages
+    # without fasters languages
     # delete $VAR1->{$_} for qw/luajit C JavascriptCore node.js/;
 
     my $max_rps = max(values %$VAR1);
