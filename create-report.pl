@@ -9,6 +9,7 @@ use URI::Escape;
 use Data::Dumper;
 
 our $report_data = 'report.dat';
+our $report_markdown = 'report.md';
 
 our %special = (
     'fact.c' => {
@@ -122,7 +123,7 @@ sub main {
         $result_report_md .= create_report('fast',  sub () {$is_fast{$_[0]} ? 1 : 0});
         $result_report_md .= create_report('other', sub () {$is_fast{$_[0]} ? 0 : 1});
 
-        open my $FHR, '>', 'report.md' or die "Error open file: $!\n";
+        open my $FHR, '>', $report_markdown or die "Error open file: $!\n";
         print $FHR $result_report_md;
         close $FHR;
     }
