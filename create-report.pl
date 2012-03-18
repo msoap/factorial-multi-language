@@ -5,6 +5,7 @@ use warnings;
 
 use Time::HiRes qw/gettimeofday tv_interval/;
 use List::Util qw/max min/;
+use URI::Escape;
 use Data::Dumper;
 
 our $report_data = 'report.dat';
@@ -77,6 +78,18 @@ sub create_report {
         my $gistogr_line = '*' x (70 * $rps / $max_rps);
         printf "%15s - %7i rps (x%-3i) %s\n", $lang, $rps, $rps / $min_rps, $gistogr_line;
     }
+
+    # google image chart
+    my $chd = "t:" . join ",", map {int($VAR1->{$_})} sort {$VAR1->{$b} <=> $VAR1->{$a}} keys %$VAR1;
+    $chd = uri_escape($chd);
+    my $chxl = "1:|" . join "|", sort {$VAR1->{$a} <=> $VAR1->{$b}} keys %$VAR1;
+    $chxl .= "|2:|" . join "|", map {int($VAR1->{$_}) . ' rps'} sort {$VAR1->{$a} <=> $VAR1->{$b}} keys %$VAR1;
+    $chxl .= "|0:|" . join "|", map {$_ * 10 . " %"} 0 .. 10;
+    $chxl = uri_escape($chxl);
+    
+    my $url = "https://chart.googleapis.com/chart?cht=bhs&chs=1000x200&chd=$chd&chco=4d89f9&chbh=15&chds=0,$max_rps&chxt=x,y,r&chxl=$chxl";
+    print "\n$url\n";
+    system("open", $url) if $^O eq 'darwin';
 }
 
 # ------------------------------------------------------------------------------
