@@ -1,4 +1,4 @@
-#!/usr/bin/env lua
+#!/usr/bin/env luajit
 
 local times = 50000000
 local fact_16 = 20922789888000
@@ -16,7 +16,7 @@ for index = 1, times, 1 do
 end
 
 if ok then
-    print("lua finish " .. times .. " - ok")
+    print("luajit finish " .. times .. " - ok")
 else
-    print("lua finish " .. times .. " - fail")
+    print("luajit finish " .. times .. " - fail")
 end
