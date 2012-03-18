@@ -20,6 +20,12 @@ Perl (5.12.3)
     perl finish 1000000 - ok
     ./fact.pl  7.91s user 0.01s system 99% cpu 7.919 total
 
+Perl6 (2011.04 built on parrot 3.6.0)
+-------------------------------------
+
+    perl6 finish 1000 - ok
+    ./fact-perl6.pl  8.32s user 0.20s system 97% cpu 8.746 total
+
 Python (2.7.1)
 --------------
 
