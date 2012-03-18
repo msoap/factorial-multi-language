@@ -5,8 +5,8 @@ my Int $fact_16 = 20922789888000;
 
 # ------------------------------------------------------------------------------
 sub fact(Int $n) {
-	return 1 if $n == 1;
-	return $n * fact($n - 1);
+    return 1 if $n == 1;
+    return $n * fact($n - 1);
 }
 
 my Bool $ok = True;

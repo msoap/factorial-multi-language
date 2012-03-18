@@ -4,8 +4,8 @@
     $fact_16 = 20922789888000;
 
     function fact($n) {
-    	if ($n < 2) return 1;
-    	return $n * fact($n - 1);
+        if ($n < 2) return 1;
+        return $n * fact($n - 1);
     }
 
     $ok = 1;

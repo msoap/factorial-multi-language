@@ -11,8 +11,8 @@ my $fact_16 = 20922789888000;
 # ------------------------------------------------------------------------------
 sub fact {
     my $n = shift;
-	return 1 if $n == 1;
-	return $n * fact($n - 1);
+    return 1 if $n == 1;
+    return $n * fact($n - 1);
 }
 
 my $ok = 1;
