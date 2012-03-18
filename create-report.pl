@@ -22,6 +22,8 @@ our %special = (
     }
 );
 
+our %is_fast = map {$_ => 1} qw/luajit C JavascriptCore node.js/;
+
 # ------------------------------------------------------------------------------
 sub calc {
     my %result;
@@ -61,7 +63,7 @@ sub calc {
 
 # ------------------------------------------------------------------------------
 sub create_report {
-    print "Report:\n";
+    my ($name, $grep_sub) = @_;
 
     my $VAR1;
     open my $FH, '<', $report_data or die "Error open file: $!\n";
@@ -69,36 +71,61 @@ sub create_report {
     die "$report_data is not valid" if $@;
     close $FH;
 
-    # without fasters languages
-    # delete $VAR1->{$_} for qw/luajit C JavascriptCore node.js/;
+    # grep by speed
+    my $stat = {map {$_ => $VAR1->{$_}}
+                grep {$grep_sub->($_)}
+                keys %$VAR1
+               };
 
-    my $max_rps = max(values %$VAR1);
-    my $min_rps = min(values %$VAR1);
-    for my $lang (sort {$VAR1->{$b} <=> $VAR1->{$a}} keys %$VAR1) {
-        my $rps = $VAR1->{$lang};
+    my $max_rps = max(values %$stat);
+    my $min_rps = min(values %$stat);
+    my $result_report_md = '';
+
+    print "Report $name:\n";
+    $result_report_md .= sprintf "###report $name (%s):\n\n", localtime() . "";
+    for my $lang (sort {$stat->{$b} <=> $stat->{$a}} keys %$stat) {
+        my $rps = $stat->{$lang};
         my $gistogr_line = '*' x (70 * $rps / $max_rps);
-        printf "%15s - %7i rps (x%-3i) %s\n", $lang, $rps, $rps / $min_rps, $gistogr_line;
+        printf "%15s - %7i rps: %s\n", $lang, $rps, $gistogr_line;
+        $result_report_md .= sprintf "    %15s - %7i rps: %s\n", $lang, $rps, $gistogr_line;
     }
+    $result_report_md .= "\n";
+    printf "\n";
 
     # google image chart
-    my $chd = "t:" . join ",", map {int($VAR1->{$_})} sort {$VAR1->{$b} <=> $VAR1->{$a}} keys %$VAR1;
+    my $chd = "t:" . join ",", map {int($stat->{$_})} sort {$stat->{$b} <=> $stat->{$a}} keys %$stat;
     $chd = uri_escape($chd);
-    my $chxl = "1:|" . join "|", sort {$VAR1->{$a} <=> $VAR1->{$b}} keys %$VAR1;
-    $chxl .= "|2:|" . join "|", map {int($VAR1->{$_}) . ' rps'} sort {$VAR1->{$a} <=> $VAR1->{$b}} keys %$VAR1;
+    my $chxl = "1:|" . join "|", sort {$stat->{$a} <=> $stat->{$b}} keys %$stat;
+    $chxl .= "|2:|" . join "|", map {int($stat->{$_}) . ' rps'} sort {$stat->{$a} <=> $stat->{$b}} keys %$stat;
     $chxl .= "|0:|" . join "|", map {$_ * 10 . " %"} 0 .. 10;
     $chxl = uri_escape($chxl);
-    
-    my $url = "https://chart.googleapis.com/chart?cht=bhs&chs=1000x200&chd=$chd&chco=4d89f9&chbh=15&chds=0,$max_rps&chxt=x,y,r&chxl=$chxl";
-    print "\n$url\n";
+    my $height_one = 15;
+    my $height = scalar(1 + keys %$stat) * ($height_one + 5) + 5;
+    my $width = 700;
+
+    my $url = "https://chart.googleapis.com/chart?cht=bhs&chs=${width}x$height&chd=$chd&chco=4d89f9&chbh=$height_one&chds=0,$max_rps&chxt=x,y,r&chxl=$chxl";
+    $result_report_md .= "![Chart for all $name]($url)\n\n";
     system("open", $url) if $^O eq 'darwin';
-    system("curl -s '$url' > chart.png");
+    system("curl -s '$url' > chart_$name.png");
+
+    return $result_report_md;
 }
 
 # ------------------------------------------------------------------------------
 sub main {
     die "$0 [ --help | --calc | --create ]\n" if $ARGV[0] && $ARGV[0] eq '--help';
     calc() if ! @ARGV || $ARGV[0] eq '--calc';
-    create_report() if ! @ARGV || $ARGV[0] eq '--create';
+
+    if (! @ARGV || $ARGV[0] eq '--create') {
+        my $result_report_md = '';
+        $result_report_md .= create_report('all',   sub () {1});
+        $result_report_md .= create_report('fast',  sub () {$is_fast{$_[0]} ? 1 : 0});
+        $result_report_md .= create_report('other', sub () {$is_fast{$_[0]} ? 0 : 1});
+
+        open my $FHR, '>', 'report.md' or die "Error open file: $!\n";
+        print $FHR $result_report_md;
+        close $FHR;
+    }
 }
 
 # ------------------------------------------------------------------------------

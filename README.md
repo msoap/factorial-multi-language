@@ -1,8 +1,8 @@
-Подсчет факториала на разных языках
-===================================
+Comparison of languages for speed by calculation of factorial in different languages
+====================================================================================
 
-Аппаратные средства:
---------------------
+Hardware:
+---------
 
     Название модели: MacBook Pro
     Идентификатор модели: MacBookPro7,1
@@ -83,19 +83,26 @@ AWK (20070501)
 Report:
 -------
 
-### text chart:
-             luajit - 9972006 rps (x133) **********************************************************************
-                  C - 6812701 rps (x91 ) ***********************************************
-     JavascriptCore - 4847180 rps (x65 ) **********************************
-            node.js - 4439017 rps (x59 ) *******************************
-                lua -  454555 rps (x6  ) ***
-             python -  195261 rps (x2  ) *
-                php -  185238 rps (x2  ) *
-               perl -  115323 rps (x1  )
-               ruby -   74500 rps (x1  )
+###report all (Sun Mar 18 20:38:20 2012):
 
-###all languages:
-![Chart for all languages](https://chart.googleapis.com/chart?cht=bhs&chs=800x200&chd=t%3A9972006%2C6812701%2C4847180%2C4439017%2C454555%2C195261%2C185238%2C115323%2C74500&chco=4d89f9&chbh=15&chds=0,9972006.58311987&chxt=x,y,r&chxl=1%3A%7Cruby%7Cperl%7Cphp%7Cpython%7Clua%7Cnode.js%7CJavascriptCore%7CC%7Cluajit%7C2%3A%7C74500%20rps%7C115323%20rps%7C185238%20rps%7C195261%20rps%7C454555%20rps%7C4439017%20rps%7C4847180%20rps%7C6812701%20rps%7C9972006%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25)
+             luajit - 9613216 rps: **********************************************************************
+                  C - 6848418 rps: *************************************************
+     JavascriptCore - 4750887 rps: **********************************
+            node.js - 4486641 rps: ********************************
+                lua -  448643 rps: ***
+             python -  183658 rps: *
+                awk -  178267 rps: *
+                php -  171625 rps: *
+               perl -  113564 rps:
+               ruby -   73900 rps:
+              perl6 -     118 rps:
 
-###languages without JIT/compile:
-![Chart for slow languages](https://chart.googleapis.com/chart?cht=bhs&chs=800x130&chd=t%3A454555%2C195261%2C185238%2C115323%2C74500&chco=4d89f9&chbh=15&chds=0,454555.854232423&chxt=x,y,r&chxl=1%3A%7Cruby%7Cperl%7Cphp%7Cpython%7Clua%7C2%3A%7C74500%20rps%7C115323%20rps%7C185238%20rps%7C195261%20rps%7C454555%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25)
+![Chart for all all](https://chart.googleapis.com/chart?cht=bhs&chs=700x245&chd=t%3A9613216%2C6848418%2C4750887%2C4486641%2C448643%2C183658%2C178267%2C171625%2C113564%2C73900%2C118&chco=4d89f9&chbh=15&chds=0,9613216.09567688&chxt=x,y,r&chxl=1%3A%7Cperl6%7Cruby%7Cperl%7Cphp%7Cawk%7Cpython%7Clua%7Cnode.js%7CJavascriptCore%7CC%7Cluajit%7C2%3A%7C118%20rps%7C73900%20rps%7C113564%20rps%7C171625%20rps%7C178267%20rps%7C183658%20rps%7C448643%20rps%7C4486641%20rps%7C4750887%20rps%7C6848418%20rps%7C9613216%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25)
+
+###report fast (Sun Mar 18 20:38:30 2012):
+
+![Chart for all fast](https://chart.googleapis.com/chart?cht=bhs&chs=700x105&chd=t%3A9613216%2C6848418%2C4750887%2C4486641&chco=4d89f9&chbh=15&chds=0,9613216.09567688&chxt=x,y,r&chxl=1%3A%7Cnode.js%7CJavascriptCore%7CC%7Cluajit%7C2%3A%7C4486641%20rps%7C4750887%20rps%7C6848418%20rps%7C9613216%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25)
+
+###report other (Sun Mar 18 20:38:40 2012):
+
+![Chart for all other](https://chart.googleapis.com/chart?cht=bhs&chs=700x165&chd=t%3A448643%2C183658%2C178267%2C171625%2C113564%2C73900%2C118&chco=4d89f9&chbh=15&chds=0,448643.615756483&chxt=x,y,r&chxl=1%3A%7Cperl6%7Cruby%7Cperl%7Cphp%7Cawk%7Cpython%7Clua%7C2%3A%7C118%20rps%7C73900%20rps%7C113564%20rps%7C171625%20rps%7C178267%20rps%7C183658%20rps%7C448643%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25)
