@@ -2,6 +2,7 @@
 ===================================
 
 Аппаратные средства:
+--------------------
 
 	  Название модели: MacBook Pro
 	  Идентификатор модели: MacBookPro7,1
@@ -11,18 +12,25 @@
 	  Общее количество ядер: 2
 	  Кэш 2-го уровня: 3 МБ
 	  Память: 4 ГБ
-	  Частота шины:	1,07 ГГц
+	  Частота шины: 1,07 ГГц
 
 perl (v5.12.3)
 --------------
 
     time ./fact.pl
-    finish: ok
-    ./fact.pl  10.80s user 0.01s system 99% cpu 10.810 total
+    finish (1000000): ok
+    ./fact.pl  11.74s user 0.01s system 99% cpu 11.751 total
 
 python (2.7.1)
 --------------
 
     time ./fact.py
-    finish: ok
-    ./fact.py  6.70s user 0.02s system 99% cpu 6.724 total
+    finish (1000000): ok
+    ./fact.py  6.89s user 0.02s system 99% cpu 6.908 total
+
+Javascript (node.js 0.6.13)
+---------------------------
+
+    time ./fact.js
+    finish (10000000): ok
+    ./fact.js  3.08s user 0.02s system 100% cpu 3.108 total
