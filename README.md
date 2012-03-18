@@ -14,13 +14,13 @@
     Память: 4 ГБ
     Частота шины: 1,07 ГГц
 
-perl (5.12.3)
+Perl (5.12.3)
 --------------
 
     time ./fact.pl
     perl finish 1000000 - ok
 
-python (2.7.1)
+Python (2.7.1)
 --------------
 
     python finish 1000000 - ok
@@ -37,3 +37,9 @@ Lua (5.1.4)
 
     lua finish 10000000 - ok
     ./fact.lua  21.98s user 0.01s system 99% cpu 22.000 total
+
+LuaJIT (2.0.0-beta9)
+--------------------
+
+    lua finish 10000000 - ok
+    luajit ./fact.lua  1.01s user 0.00s system 97% cpu 1.043 total
