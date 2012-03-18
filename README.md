@@ -32,6 +32,12 @@ Javascript (node.js 0.6.13)
     node.js finish 50000000 - ok
     ./fact.js  11.14s user 0.05s system 99% cpu 11.229 total
 
+Javascript (JavascriptCore/Safari 5.1.4)
+---------------------------
+
+    JavascriptCore finish 50000000 - ok
+    jsc fact-jsc.js  10.31s user 0.01s system 98% cpu 10.500 total
+
 Lua (5.1.4)
 -----------
 
