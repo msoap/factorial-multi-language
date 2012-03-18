@@ -13,5 +13,5 @@ sub fact {
 }
 
 my $ok = 1;
-$ok &&= fact(20) == 2432902008176640000 for 1 .. 1_000_000;
-say "finish: " . $ok ? 'ok' : 'failed';
+$ok &&= fact(21) == 51090942171709440000 for 1 .. 1_000_000;
+say 'finish: ' . ($ok ? 'ok' : 'failed');
