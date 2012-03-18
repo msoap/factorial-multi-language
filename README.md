@@ -17,8 +17,8 @@
 Perl (5.12.3)
 --------------
 
-    time ./fact.pl
     perl finish 1000000 - ok
+    ./fact.pl  7.91s user 0.01s system 99% cpu 7.919 total
 
 Python (2.7.1)
 --------------
@@ -55,3 +55,15 @@ GCC (4.2.1 LLVM build 2335.15.00)
 
     C finish 50000000 - ok
     ./fact_c  7.24s user 0.00s system 99% cpu 7.251 total
+
+Ruby (1.8.7)
+------------
+
+    ruby finish 1000000 - ok
+    ./fact.rb  13.51s user 0.01s system 99% cpu 13.517 total
+
+PHP (5.3.8)
+-----------
+
+    php finish 1000000 - ok
+    ./fact.php  5.64s user 0.02s system 99% cpu 5.673 total

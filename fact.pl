@@ -17,4 +17,4 @@ sub fact {
 
 my $ok = 1;
 $ok &&= fact(16) == $fact_16 for 1 .. $times;
-say "perl finish $times - " . ($ok ? 'ok' : 'failed');
+say "perl finish $times - " . ($ok ? 'ok' : 'fail');

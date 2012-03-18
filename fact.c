@@ -15,5 +15,5 @@ main() {
     for(i = 0; i < times; ++i) {
         ok = ok && fact(16) == fact_16;
     }
-    printf("C finish %i - %s\n", times, ok ? "ok" : "failed");
+    printf("C finish %i - %s\n", times, ok ? "ok" : "fail");
 }

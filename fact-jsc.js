@@ -12,4 +12,4 @@ for (var i = 0; i < times; i++) {
     ok = ok && fact(16) == fact_16;
 };
 
-print('JavascriptCore finish ' + times + ' - '+ (ok ? 'ok' : 'failed'));
+print('JavascriptCore finish ' + times + ' - ' + (ok ? 'ok' : 'fail'));
