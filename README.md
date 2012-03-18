@@ -41,14 +41,14 @@ Javascript (JavascriptCore/Safari 5.1.4)
 Lua (5.1.4)
 -----------
 
-    lua finish 10000000 - ok
-    ./fact.lua  21.98s user 0.01s system 99% cpu 22.000 total
+    lua finish 3000000 - ok
+    lua fact.lua  6.67s user 0.00s system 99% cpu 6.673 total
 
 LuaJIT (2.0.0-beta9)
 --------------------
 
     lua finish 50000000 - ok
-    luajit fact.lua  4.98s user 0.00s system 99% cpu 4.992 total
+    luajit fact-jit.lua  5.00s user 0.00s system 99% cpu 5.009 total
 
 GCC (4.2.1 LLVM build 2335.15.00)
 ---------------------------------

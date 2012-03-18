@@ -1,6 +1,6 @@
 #!/usr/bin/env lua
 
-local times = 3000000
+local times = 50000000
 local fact_16 = 20922789888000
 
 function fact(n)
