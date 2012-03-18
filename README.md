@@ -85,5 +85,5 @@ Report:
 ###all languages:
 ![Chart for all languages](https://chart.googleapis.com/chart?cht=bhs&chs=800x200&chd=t%3A9972006%2C6812701%2C4847180%2C4439017%2C454555%2C195261%2C185238%2C115323%2C74500&chco=4d89f9&chbh=15&chds=0,9972006.58311987&chxt=x,y,r&chxl=1%3A%7Cruby%7Cperl%7Cphp%7Cpython%7Clua%7Cnode.js%7CJavascriptCore%7CC%7Cluajit%7C2%3A%7C74500%20rps%7C115323%20rps%7C185238%20rps%7C195261%20rps%7C454555%20rps%7C4439017%20rps%7C4847180%20rps%7C6812701%20rps%7C9972006%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25)
 
-###languages withot JIT/compile:
+###languages without JIT/compile:
 ![Chart for slow languages](https://chart.googleapis.com/chart?cht=bhs&chs=800x130&chd=t%3A454555%2C195261%2C185238%2C115323%2C74500&chco=4d89f9&chbh=15&chds=0,454555.854232423&chxt=x,y,r&chxl=1%3A%7Cruby%7Cperl%7Cphp%7Cpython%7Clua%7C2%3A%7C74500%20rps%7C115323%20rps%7C185238%20rps%7C195261%20rps%7C454555%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25)
