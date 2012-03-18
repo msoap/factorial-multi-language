@@ -47,5 +47,11 @@ Lua (5.1.4)
 LuaJIT (2.0.0-beta9)
 --------------------
 
-    lua finish 10000000 - ok
-    luajit ./fact.lua  1.01s user 0.00s system 97% cpu 1.043 total
+    lua finish 50000000 - ok
+    luajit fact.lua  4.98s user 0.00s system 99% cpu 4.992 total
+
+GCC (4.2.1 LLVM build 2335.15.00)
+---------------------------------
+
+    C finish 50000000 - ok
+    ./fact_c  7.24s user 0.00s system 99% cpu 7.251 total
