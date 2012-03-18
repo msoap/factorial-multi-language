@@ -74,6 +74,12 @@ PHP (5.3.8)
     php finish 1000000 - ok
     ./fact.php  5.64s user 0.02s system 99% cpu 5.673 total
 
+AWK (20070501)
+--------------
+
+    awk finish 1000000 - ok
+    ./fact.awk  5.79s user 0.00s system 99% cpu 5.806 total
+
 Report:
 -------
 

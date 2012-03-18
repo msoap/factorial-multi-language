@@ -91,6 +91,7 @@ sub create_report {
     my $url = "https://chart.googleapis.com/chart?cht=bhs&chs=1000x200&chd=$chd&chco=4d89f9&chbh=15&chds=0,$max_rps&chxt=x,y,r&chxl=$chxl";
     print "\n$url\n";
     system("open", $url) if $^O eq 'darwin';
+    system("curl -s '$url' > chart.png");
 }
 
 # ------------------------------------------------------------------------------
