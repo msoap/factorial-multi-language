@@ -41,7 +41,7 @@ sub calc {
 
         my ($name, $times) = $output =~ /^([\.\w]+) \s+ finish \s+ (\d+) \s+ - \s+ ok\s*$/x;
         unless ($name && $times) {
-            die " fail ($output)\n";
+            warn " fail ($output)\n";
             next;
         }
 
