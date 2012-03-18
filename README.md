@@ -83,26 +83,31 @@ AWK (20070501)
 Report:
 -------
 
-###report all (Sun Mar 18 20:38:20 2012):
+###report all (Sun Mar 18 22:38:21 2012):
 
-             luajit - 9613216 rps: **********************************************************************
-                  C - 6848418 rps: *************************************************
-     JavascriptCore - 4750887 rps: **********************************
-            node.js - 4486641 rps: ********************************
-                lua -  448643 rps: ***
-             python -  183658 rps: *
-                awk -  178267 rps: *
-                php -  171625 rps: *
-               perl -  113564 rps:
-               ruby -   73900 rps:
-              perl6 -     118 rps:
+          C gcc -O1 - 43144398 rps: **********************************************************************
+          C gcc -O4 - 20940540 rps: *********************************
+          C gcc -O2 - 19500719 rps: *******************************
+          C gcc -O3 - 18696670 rps: ******************************
+          C gcc -O5 - 18463020 rps: *****************************
+             luajit -  9829876 rps: ***************
+                  C -  6744576 rps: **********
+     JavascriptCore -  4830169 rps: *******
+            node.js -  4394698 rps: *******
+                lua -   453184 rps: 
+             python -   179219 rps: 
+                php -   176826 rps: 
+                awk -   175331 rps: 
+               perl -   121467 rps: 
+               ruby -    74872 rps: 
+              perl6 -      114 rps: 
 
-![Chart for all all](https://chart.googleapis.com/chart?cht=bhs&chs=700x245&chd=t%3A9613216%2C6848418%2C4750887%2C4486641%2C448643%2C183658%2C178267%2C171625%2C113564%2C73900%2C118&chco=4d89f9&chbh=15&chds=0,9613216.09567688&chxt=x,y,r&chxl=1%3A%7Cperl6%7Cruby%7Cperl%7Cphp%7Cawk%7Cpython%7Clua%7Cnode.js%7CJavascriptCore%7CC%7Cluajit%7C2%3A%7C118%20rps%7C73900%20rps%7C113564%20rps%7C171625%20rps%7C178267%20rps%7C183658%20rps%7C448643%20rps%7C4486641%20rps%7C4750887%20rps%7C6848418%20rps%7C9613216%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25)
+![Chart for all all](https://chart.googleapis.com/chart?cht=bhs&chs=700x345&chd=t%3A43144398%2C20940540%2C19500719%2C18696670%2C18463020%2C9829876%2C6744576%2C4830169%2C4394698%2C453184%2C179219%2C176826%2C175331%2C121467%2C74872%2C114&chco=4d89f9&chbh=15&chds=0,43144398.260763&chxt=x,y,r&chxl=1%3A%7Cperl6%7Cruby%7Cperl%7Cawk%7Cphp%7Cpython%7Clua%7Cnode.js%7CJavascriptCore%7CC%7Cluajit%7CC%20gcc%20-O5%7CC%20gcc%20-O3%7CC%20gcc%20-O2%7CC%20gcc%20-O4%7CC%20gcc%20-O1%7C2%3A%7C114%20rps%7C74872%20rps%7C121467%20rps%7C175331%20rps%7C176826%20rps%7C179219%20rps%7C453184%20rps%7C4394698%20rps%7C4830169%20rps%7C6744576%20rps%7C9829876%20rps%7C18463020%20rps%7C18696670%20rps%7C19500719%20rps%7C20940540%20rps%7C43144398%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25)
 
-###report fast (Sun Mar 18 20:38:30 2012):
+###report fast (Sun Mar 18 22:38:31 2012):
 
-![Chart for all fast](https://chart.googleapis.com/chart?cht=bhs&chs=700x105&chd=t%3A9613216%2C6848418%2C4750887%2C4486641&chco=4d89f9&chbh=15&chds=0,9613216.09567688&chxt=x,y,r&chxl=1%3A%7Cnode.js%7CJavascriptCore%7CC%7Cluajit%7C2%3A%7C4486641%20rps%7C4750887%20rps%7C6848418%20rps%7C9613216%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25)
+![Chart for all fast](https://chart.googleapis.com/chart?cht=bhs&chs=700x205&chd=t%3A43144398%2C20940540%2C19500719%2C18696670%2C18463020%2C9829876%2C6744576%2C4830169%2C4394698&chco=4d89f9&chbh=15&chds=0,43144398.260763&chxt=x,y,r&chxl=1%3A%7Cnode.js%7CJavascriptCore%7CC%7Cluajit%7CC%20gcc%20-O5%7CC%20gcc%20-O3%7CC%20gcc%20-O2%7CC%20gcc%20-O4%7CC%20gcc%20-O1%7C2%3A%7C4394698%20rps%7C4830169%20rps%7C6744576%20rps%7C9829876%20rps%7C18463020%20rps%7C18696670%20rps%7C19500719%20rps%7C20940540%20rps%7C43144398%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25)
 
-###report other (Sun Mar 18 20:38:40 2012):
+###report other (Sun Mar 18 22:38:42 2012):
 
-![Chart for all other](https://chart.googleapis.com/chart?cht=bhs&chs=700x165&chd=t%3A448643%2C183658%2C178267%2C171625%2C113564%2C73900%2C118&chco=4d89f9&chbh=15&chds=0,448643.615756483&chxt=x,y,r&chxl=1%3A%7Cperl6%7Cruby%7Cperl%7Cphp%7Cawk%7Cpython%7Clua%7C2%3A%7C118%20rps%7C73900%20rps%7C113564%20rps%7C171625%20rps%7C178267%20rps%7C183658%20rps%7C448643%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25)
+![Chart for all other](https://chart.googleapis.com/chart?cht=bhs&chs=700x165&chd=t%3A453184%2C179219%2C176826%2C175331%2C121467%2C74872%2C114&chco=4d89f9&chbh=15&chds=0,453184.664593498&chxt=x,y,r&chxl=1%3A%7Cperl6%7Cruby%7Cperl%7Cawk%7Cphp%7Cpython%7Clua%7C2%3A%7C114%20rps%7C74872%20rps%7C121467%20rps%7C175331%20rps%7C176826%20rps%7C179219%20rps%7C453184%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25)

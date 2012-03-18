@@ -17,17 +17,48 @@ our %special = (
         instead => './fact_c',
         after => 'rm fact_c',
     },
+    'fact-O1.c' => {
+        before => 'gcc -O1 -o fact_c fact-O1.c',
+        instead => './fact_c',
+        after => 'rm fact_c',
+        name_suffix => ' gcc -O1',
+    },
+    'fact-O2.c' => {
+        before => 'gcc -O2 -o fact_c fact-O2.c',
+        instead => './fact_c',
+        after => 'rm fact_c',
+        name_suffix => ' gcc -O2',
+    },
+    'fact-O3.c' => {
+        before => 'gcc -O3 -o fact_c fact-O3.c',
+        instead => './fact_c',
+        after => 'rm fact_c',
+        name_suffix => ' gcc -O3',
+    },
+    'fact-O4.c' => {
+        before => 'gcc -O4 -o fact_c fact-O4.c',
+        instead => './fact_c',
+        after => 'rm fact_c',
+        name_suffix => ' gcc -O4',
+    },
+    'fact-O5.c' => {
+        before => 'gcc -O5 -o fact_c fact-O5.c',
+        instead => './fact_c',
+        after => 'rm fact_c',
+        name_suffix => ' gcc -O5',
+    },
     'fact-jsc.js' => {
         # ln -s /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc ~/bin/
         instead => 'jsc fact-jsc.js'
     }
 );
 
-our %is_fast = map {$_ => 1} qw/luajit C JavascriptCore node.js/;
+our %is_fast = map {$_ => 1} qw/luajit C JavascriptCore node.js/, map {"C gcc -O$_"} qw/1 2 3 4 5/;
 
 # ------------------------------------------------------------------------------
 sub calc {
     my %result;
+
     for my $exe (glob 'fact*.*') {
 
         system($special{$exe}->{before}) if exists $special{$exe} && $special{$exe}->{before};
@@ -47,6 +78,7 @@ sub calc {
             warn " fail ($output)\n";
             next;
         }
+        $name .= $special{$exe}->{name_suffix} if exists $special{$exe} && $special{$exe}->{name_suffix};
 
         my $elapsed = tv_interval ($t0, [gettimeofday()]);
         my $times_per_seconds = $times / $elapsed;
@@ -64,7 +96,7 @@ sub calc {
 
 # ------------------------------------------------------------------------------
 sub create_report {
-    my ($name, $grep_sub) = @_;
+    my ($name, %OPT) = @_;
 
     my $VAR1;
     open my $FH, '<', $report_data or die "Error open file: $!\n";
@@ -74,7 +106,7 @@ sub create_report {
 
     # grep by speed
     my $stat = {map {$_ => $VAR1->{$_}}
-                grep {$grep_sub->($_)}
+                grep {$OPT{grep}->($_)}
                 keys %$VAR1
                };
 
@@ -87,10 +119,10 @@ sub create_report {
     for my $lang (sort {$stat->{$b} <=> $stat->{$a}} keys %$stat) {
         my $rps = $stat->{$lang};
         my $gistogr_line = '*' x (70 * $rps / $max_rps);
-        printf "%15s - %7i rps: %s\n", $lang, $rps, $gistogr_line;
-        $result_report_md .= sprintf "    %15s - %7i rps: %s\n", $lang, $rps, $gistogr_line;
+        printf "%15s - %8i rps: %s\n", $lang, $rps, $gistogr_line;
+        $result_report_md .= sprintf "    %15s - %8i rps: %s\n", $lang, $rps, $gistogr_line if $OPT{add_text_chart};
     }
-    $result_report_md .= "\n";
+    $result_report_md .= "\n" if $OPT{add_text_chart};
     printf "\n";
 
     # google image chart
@@ -119,9 +151,9 @@ sub main {
 
     if (! @ARGV || $ARGV[0] eq '--create') {
         my $result_report_md = '';
-        $result_report_md .= create_report('all',   sub () {1});
-        $result_report_md .= create_report('fast',  sub () {$is_fast{$_[0]} ? 1 : 0});
-        $result_report_md .= create_report('other', sub () {$is_fast{$_[0]} ? 0 : 1});
+        $result_report_md .= create_report('all',   grep => sub () {1}, add_text_chart => 1);
+        $result_report_md .= create_report('fast',  grep => sub () {$is_fast{$_[0]} ? 1 : 0});
+        $result_report_md .= create_report('other', grep => sub () {$is_fast{$_[0]} ? 0 : 1});
 
         open my $FHR, '>', $report_markdown or die "Error open file: $!\n";
         print $FHR $result_report_md;
