@@ -50,10 +50,16 @@ our %special = (
     'fact-jsc.js' => {
         # ln -s /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc ~/bin/
         instead => 'jsc fact-jsc.js'
-    }
+    },
+    'fact.go' => {
+        before => 'go build fact.go',
+        instead => './fact',
+        after => 'rm fact',
+    },
 );
 
-our %is_fast = map {$_ => 1} qw/luajit C JavascriptCore node.js/, map {"C gcc -O$_"} qw/1 2 3 4 5/;
+our %is_fast = map {$_ => 1} qw/luajit C JavascriptCore node.js Go/
+                             , map {"C gcc -O$_"} qw/1 2 3 4 5/;
 
 # ------------------------------------------------------------------------------
 sub calc {

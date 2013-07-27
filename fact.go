@@ -1,0 +1,31 @@
+package main
+
+import "fmt"
+
+const (
+    times = 150000000
+    fact_16 uint64 = 20922789888000
+)
+
+// ----------------------------------------------
+func fact(n uint64) uint64 {
+    if n == 1 {
+        return 1
+    }
+    return n * fact(n - 1)
+}
+
+// ----------------------------------------------
+func main() {
+    ok := true
+
+    for i := 0; i < times; i++ {
+        ok = ok && fact(16) == fact_16
+    }
+
+    if ok {
+        fmt.Printf("Go finish %d - ok\n", times)
+    } else {
+        fmt.Printf("Go finish %d - fail\n", times)
+    }
+}
