@@ -56,9 +56,14 @@ our %special = (
         instead => './fact',
         after => 'rm fact',
     },
+    'fact.rs' => {
+        before => 'rust build fact.rs',
+        instead => './fact',
+        after => 'rm fact',
+    },
 );
 
-our %is_fast = map {$_ => 1} qw/luajit C JavascriptCore node.js Go/
+our %is_fast = map {$_ => 1} qw/luajit C JavascriptCore node.js Go Rust/
                              , map {"C gcc -O$_"} qw/1 2 3 4 5/;
 
 # ------------------------------------------------------------------------------
@@ -121,7 +126,7 @@ sub create_report {
     my $result_report_md = '';
 
     print "Report $name:\n";
-    $result_report_md .= sprintf "###report $name (%s):\n\n", localtime() . "";
+    $result_report_md .= sprintf "### report $name (%s):\n\n", localtime() . "";
     for my $lang (sort {$stat->{$b} <=> $stat->{$a}} keys %$stat) {
         my $rps = $stat->{$lang};
         my $gistogr_line = '*' x (70 * $rps / $max_rps);
