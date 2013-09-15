@@ -63,7 +63,7 @@ our %special = (
     },
 );
 
-our %is_fast = map {$_ => 1} qw/luajit C JavascriptCore node.js Go Rust/
+our %is_fast = map {$_ => 1} qw/luajit C JavascriptCore node.js Go Rust CoffeeScript Dart/
                              , map {"C gcc -O$_"} qw/1 2 3 4 5/;
 
 # ------------------------------------------------------------------------------
