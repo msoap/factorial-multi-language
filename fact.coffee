@@ -1,0 +1,12 @@
+#!/usr/bin/env coffee
+
+times = 50000000
+fact_16 = 20922789888000
+
+fact = (n) ->
+    if n == 1 then 1 else n * fact n - 1
+
+ok = true
+ok = ok && fact(16) == fact_16 for i in [0...times]
+
+console.log "coffee finish #{times} - #{if ok then 'ok' else 'fail'}"
