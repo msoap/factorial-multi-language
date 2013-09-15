@@ -9,4 +9,4 @@ fact = (n) ->
 ok = true
 ok = ok && fact(16) == fact_16 for i in [0...times]
 
-console.log "coffee finish #{times} - #{if ok then 'ok' else 'fail'}"
+console.log "CoffeeScript finish #{times} - #{if ok then 'ok' else 'fail'}"

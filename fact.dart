@@ -16,5 +16,5 @@ void main() {
         ok = ok && fact(16) == fact_16;
     }
 
-    print("dart finish ${times.toString()} - ${ok ? 'ok' : 'fail'}");
+    print("Dart finish ${times.toString()} - ${ok ? 'ok' : 'fail'}");
 }
