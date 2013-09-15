@@ -71,7 +71,7 @@ our %is_fast = map {$_ => 1} qw/luajit C JavascriptCore node.js Go Rust CoffeeSc
 sub calc {
     my %result;
 
-    for my $exe (glob 'fact*.*') {
+    for my $exe (sort glob 'fact*.*') {
         next unless -f $exe && -r $exe;
 
         system($special{$exe}->{before}) if exists $special{$exe} && $special{$exe}->{before};
