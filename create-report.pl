@@ -10,6 +10,7 @@ use Data::Dumper;
 
 our $report_data = 'report.dat';
 our $report_markdown = 'report.md';
+our $MAX_GOOGLE_CHART_API_SQUARE = 300_000; # maximum square of google chart
 
 our %special = (
     'fact.c' => {
@@ -147,6 +148,11 @@ sub create_report {
     my $height_one = 15;
     my $height = scalar(1 + keys %$stat) * ($height_one + 5) + 5;
     my $width = 700;
+
+    # maximum pixels in for "chs" param
+    if ($width * $height > $MAX_GOOGLE_CHART_API_SQUARE) {
+        $width = int($MAX_GOOGLE_CHART_API_SQUARE / $height);
+    }
 
     my $url = "https://chart.googleapis.com/chart?cht=bhs&chs=${width}x$height&chd=$chd&chco=4d89f9&chbh=$height_one&chds=0,$max_rps&chxt=x,y,r&chxl=$chxl";
     $result_report_md .= "![Chart for $name]($url)\n\n";
