@@ -30,24 +30,6 @@ our %special = (
         after => 'rm fact_c',
         name_suffix => ' gcc -O2',
     },
-    'fact-O3.c' => {
-        before => 'gcc -O3 -o fact_c fact-O3.c',
-        instead => './fact_c',
-        after => 'rm fact_c',
-        name_suffix => ' gcc -O3',
-    },
-    'fact-O4.c' => {
-        before => 'gcc -O4 -o fact_c fact-O4.c',
-        instead => './fact_c',
-        after => 'rm fact_c',
-        name_suffix => ' gcc -O4',
-    },
-    'fact-O5.c' => {
-        before => 'gcc -O5 -o fact_c fact-O5.c',
-        instead => './fact_c',
-        after => 'rm fact_c',
-        name_suffix => ' gcc -O5',
-    },
     'fact-jsc.js' => {
         # ln -s /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc ~/bin/
         instead => 'jsc fact-jsc.js'
