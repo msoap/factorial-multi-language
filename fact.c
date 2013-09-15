@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#define times 50000000
+#define times 500000000
 #define fact_16 20922789888000
 
 long fact(int n) {

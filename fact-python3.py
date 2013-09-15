@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
-times = 1000000
+times = 2000000
 fact_16 = 20922789888000
 
 def fact(n):
