@@ -71,6 +71,7 @@ sub calc {
     my %result;
 
     for my $exe (glob 'fact*.*') {
+        next unless -f $exe && -r $exe;
 
         system($special{$exe}->{before}) if exists $special{$exe} && $special{$exe}->{before};
 
