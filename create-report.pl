@@ -42,7 +42,7 @@ our %special = (
     'fact.rs' => {
         before => 'rust build fact.rs',
         instead => './fact',
-        after => 'rm fact',
+        after => 'rm fact; rm -rf fact.dSYM/',
     },
 );
 
