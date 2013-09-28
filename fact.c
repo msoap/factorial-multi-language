@@ -8,10 +8,10 @@
 
 #include <stdio.h>
 
-#define times 100000000
-#define fact_16 20922789888000
+#define times 100000000L
+#define fact_16 20922789888000LL
 
-long fact(int n) {
+long long int fact(int n) {
     if (n == 1)
         return 1;
     return(n * fact(n - 1));
@@ -19,9 +19,9 @@ long fact(int n) {
 
 int main() {
     int ok = 1;
-    long i;
+    long int i;
     for(i = 0; i < times; ++i) {
         ok = ok && fact(16) == fact_16;
     }
-    printf("C finish %i - %s\n", times, ok ? "ok" : "fail");
+    printf("C finish %li - %s\n", times, ok ? "ok" : "fail");
 }
