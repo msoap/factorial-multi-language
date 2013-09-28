@@ -9,7 +9,7 @@ long fact(int n) {
     return(n * fact(n - 1));
 }
 
-main() {
+int main() {
     int ok = 1;
     long i;
     for(i = 0; i < times; ++i) {
