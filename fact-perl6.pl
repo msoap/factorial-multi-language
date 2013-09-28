@@ -1,5 +1,8 @@
 #!/usr/bin/env perl6
 
+# @@@ get_version: perl6 -v | perl6 -p -e 's/This \s+ is \s+ perl6 \s+ version \s+//'
+# @@@ skip_chart: 1
+
 my Int $times = 5_000;
 my Int $fact_16 = 20922789888000;
 

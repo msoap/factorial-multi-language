@@ -1,5 +1,7 @@
 #!/usr/bin/env lua
 
+-- @@@ get_version: lua -v | awk '{print $2}'
+
 local times = 3000000
 local fact_16 = 20922789888000
 

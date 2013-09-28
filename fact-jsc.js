@@ -1,3 +1,12 @@
+// Safari engine, for use:
+// ln -s /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc ~/bin/
+
+/*
+    @@@ version: 6.0.5
+    @@@ instead: jsc fact-jsc.js
+    @@@ is_fast: 1
+*/
+
 var times = 50000000;
 var fact_16 = 20922789888000;
 

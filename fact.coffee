@@ -1,5 +1,8 @@
 #!/usr/bin/env coffee
 
+# @@@ get_version: coffee --version | sed 's/CoffeeScript version //'
+# @@@ is_fast: 1
+
 times = 50000000
 fact_16 = 20922789888000
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# @@@ get_version: ruby --version | awk '{print $2}'
+
 times = 1000000
 fact_16 = 20922789888000
 

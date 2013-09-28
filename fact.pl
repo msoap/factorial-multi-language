@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+# @@@ get_version: perl -v | perl -ne 'print $1 if /(\d+(\.\d+){2})/'
+
 use 5.10.0;
 
 use strict;

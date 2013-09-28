@@ -1,5 +1,7 @@
 #!/usr/bin/env gawk -f
 
+# @@@ get_version: gawk --version | gawk 'FNR == 1 {gsub(/,/, "", $3); print $3}'
+
 function fact(n) {
     if (n == 1)
         return 1

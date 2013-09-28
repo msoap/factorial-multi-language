@@ -1,5 +1,13 @@
 package main
 
+/*
+    @@@ get_version: go version | grep -Eo '\d+\.\d+\.\d+'
+    @@@ before: go build fact.go
+    @@@ instead: ./fact
+    @@@ after: rm fact
+    @@@ is_fast: 1
+*/
+
 import "fmt"
 
 const (

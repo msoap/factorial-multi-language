@@ -1,3 +1,12 @@
+/*
+    @@@ get_version: gcc --version 2>/dev/null| grep -E 'gcc|version'
+    @@@ before: gcc -O1 -o fact_c fact-O1.c
+    @@@ instead: ./fact_c
+    @@@ after: rm fact_c
+    @@@ name_suffix: gcc -O1
+    @@@ is_fast: 1
+*/
+
 #include <stdio.h>
 
 #define times 500000000

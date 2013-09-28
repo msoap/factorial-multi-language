@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 "use strict";
 
+/*
+    @@@ get_version: node --version | sed s/v//
+    @@@ is_fast: 1
+*/
+
 var times = 50000000;
 var fact_16 = 20922789888000;
 

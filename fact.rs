@@ -1,3 +1,11 @@
+/*
+    @@@ get_version: rust --version | grep rust | grep -Eo '\d+\.\d+'
+    @@@ before: rust build fact.rs
+    @@@ instead: ./fact
+    @@@ after: rm fact; rm -rf fact.dSYM/
+    @@@ is_fast: 1
+*/
+
 static times: uint = 50000000;
 static fact_16: uint = 20922789888000;
 

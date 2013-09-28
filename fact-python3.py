@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf8 -*-
 
+# @@@ get_version: python3 -V 2>&1 | awk '{print $2}'
+
 times = 2000000
 fact_16 = 20922789888000
 

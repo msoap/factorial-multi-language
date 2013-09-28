@@ -1,5 +1,7 @@
 #!/usr/bin/env awk -f
 
+# @@@ get_version: awk --version | awk '{print $3}'
+
 function fact(n) {
     if (n == 1)
         return 1
