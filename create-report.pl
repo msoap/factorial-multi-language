@@ -77,9 +77,16 @@ sub calc {
 
         my $elapsed = tv_interval ($t0, [gettimeofday()]);
         my $times_per_seconds = $times / $elapsed;
-        $result{$name} = $times_per_seconds;
+        my $log_line = sprintf "%0.3f sec for %i = %0.3f rps", $elapsed, $times, $times_per_seconds;
 
-        printf "%0.3f sec for %i = %0.3f rps\n", $elapsed, $times, $times_per_seconds;
+        $result{$name} = {
+            times => $times
+            , times_per_seconds => $times_per_seconds
+            , elapsed => $elapsed
+            , log_line => $log_line
+        };
+
+        print "$log_line\n";
 
         system($special{$exe}->{after}) if exists $special{$exe} && $special{$exe}->{after};
     }
@@ -100,7 +107,7 @@ sub create_report {
     close $FH;
 
     # grep by speed
-    my $stat = {map {$_ => $VAR1->{$_}}
+    my $stat = {map {$_ => $VAR1->{$_}->{times_per_seconds}}
                 grep {$OPT{grep}->($_)}
                 keys %$VAR1
                };
