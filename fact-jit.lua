@@ -1,6 +1,6 @@
 #!/usr/bin/env luajit
 
--- @@@ get_version: luajit -v | grep -Eo '\d+\.\d+\.\d+'
+-- @@@ get_version: luajit -v | awk '{print $2}'
 -- @@@ is_fast: 1
 
 local times = 50000000

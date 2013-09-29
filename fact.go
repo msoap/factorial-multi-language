@@ -1,7 +1,7 @@
 package main
 
 /*
-    @@@ get_version: go version | grep -Eo '\d+\.\d+\.\d+'
+    @@@ get_version: go version | awk '{print $3}'
     @@@ before: go build fact.go
     @@@ instead: ./fact
     @@@ after: rm fact
