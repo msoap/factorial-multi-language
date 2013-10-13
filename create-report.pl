@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+use v5.10;
 use strict;
 use warnings;
 
@@ -100,12 +101,10 @@ sub calc {
 }
 
 # ------------------------------------------------------------------------------
-{
-    my $VAR1;
-
 sub create_report {
     my ($name, %OPT) = @_;
 
+    state $VAR1;
     unless ($VAR1) {
         open my $FH, '<', $report_data or die "Error open file: $!\n";
         eval join('', <$FH>);
@@ -179,7 +178,7 @@ sub create_report {
     system("curl -s '$url' > chart_$name.png");
 
     return join("\n", @result_report_md);
-}}
+}
 
 # ------------------------------------------------------------------------------
 sub main {
