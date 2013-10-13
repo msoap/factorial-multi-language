@@ -1,7 +1,7 @@
 package main
 
 /*
-    @@@ get_version: go version | awk '{print $3}'
+    @@@ get_version: go version | awk '{print $3}' | sed 's/go//'
     @@@ before: go build fact.go
     @@@ instead: ./fact
     @@@ after: rm fact
