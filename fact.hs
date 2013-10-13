@@ -2,7 +2,6 @@
 -- @@@ before: ghc -o fact_hs fact.hs
 -- @@@ instead: ./fact_hs
 -- @@@ after: rm fact_hs fact.o fact.hi
--- @@@ is_fast: 1
 
 module Main where
 
@@ -14,7 +13,7 @@ factorial 0 = 1
 factorial n = n * factorial(n - 1)
 
 main = do
-    let result = if foldr1 (&&) [factorial(16) == 20922789888000 | x <- [1 .. times]]
+    let result = if foldr1 (&&) [factorial(16) == 20922789888000 | x <- takeWhile (<= times) [1..]]
                  then "ok"
                  else "fail"
     putStrLn("Haskell finish " ++ (show times) ++ " - " ++ result)
