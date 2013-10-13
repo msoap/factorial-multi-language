@@ -100,18 +100,22 @@ sub calc {
 }
 
 # ------------------------------------------------------------------------------
+{
+    my $VAR1;
+
 sub create_report {
     my ($name, %OPT) = @_;
 
-    my $VAR1;
-    open my $FH, '<', $report_data or die "Error open file: $!\n";
-    eval join('', <$FH>);
-    die "$report_data is not valid" if $@;
-    close $FH;
+    unless ($VAR1) {
+        open my $FH, '<', $report_data or die "Error open file: $!\n";
+        eval join('', <$FH>);
+        die "$report_data is not valid" if $@;
+        close $FH;
 
-    unless (%is_fast) {
-        for my $lang (keys %$VAR1) {
-            $is_fast{$lang} = 1 if $VAR1->{$lang}->{is_fast};
+        unless (%is_fast) {
+            for my $lang (keys %$VAR1) {
+                $is_fast{$lang} = 1 if $VAR1->{$lang}->{is_fast};
+            }
         }
     }
 
@@ -124,10 +128,6 @@ sub create_report {
     my $max_rps = max(values %$stat);
     my $min_rps = min(values %$stat);
     my @result_report_md;
-
-    if ($OPT{add_head}) {
-        push @result_report_md, "## Report:\n";
-    }
 
     if ($OPT{add_versions}) {
         push @result_report_md, "### versions:\n";
@@ -179,7 +179,7 @@ sub create_report {
     system("curl -s '$url' > chart_$name.png");
 
     return join("\n", @result_report_md);
-}
+}}
 
 # ------------------------------------------------------------------------------
 sub main {
@@ -188,14 +188,19 @@ sub main {
 
     if (! @ARGV || $ARGV[0] eq '--create') {
         my $result_report_md = '';
-        $result_report_md .= create_report('all',   grep => sub () {1}, add_versions => 1, add_raw => 1, add_head => 1);
+        $result_report_md .= create_report('all',   grep => sub () {1}, add_versions => 1, add_raw => 1);
         $result_report_md .= create_report('fast',  grep => sub () {$is_fast{$_[0]} ? 1 : 0});
         $result_report_md .= create_report('other', grep => sub () {$is_fast{$_[0]} ? 0 : 1});
 
+        my $report_vars = {
+            hardware => `cat hardware.txt`
+            , report => $result_report_md
+        };
+        my $report_tmpl =  join("", <DATA>);
+        $report_tmpl =~ s/\$(\w+)/$report_vars->{$1}/g;
+
         open my $FHR, '>', $report_markdown or die "Error open file: $!\n";
-        print $FHR join("", <DATA>);
-        print $FHR `cat hardware.txt` . "\n";
-        print $FHR $result_report_md;
+        print $FHR $report_tmpl;
         close $FHR;
     }
 }
@@ -209,3 +214,15 @@ Comparison of languages for speed by calculation of factorial in different langu
 
 Hardware:
 ---------
+$hardware
+
+Report:
+-------
+$report
+
+See also
+--------
+
+  * [Wikipedia](http://en.wikipedia.org/wiki/Factorial)
+  * [Rosettacode](http://rosettacode.org/wiki/Factorial)
+  * [Stackoverflow](http://stackoverflow.com/questions/23930/factorial-algorithms-in-different-languages)
