@@ -9,7 +9,7 @@ use URI::Escape;
 use Data::Dumper;
 
 our $report_data = 'report.dat';
-our $report_markdown = 'report.md';
+our $report_markdown = 'README.md';
 our $MAX_GOOGLE_CHART_API_SQUARE = 300_000; # maximum square of google chart
 
 our %is_fast;
@@ -193,6 +193,8 @@ sub main {
         $result_report_md .= create_report('other', grep => sub () {$is_fast{$_[0]} ? 0 : 1});
 
         open my $FHR, '>', $report_markdown or die "Error open file: $!\n";
+        print $FHR join("", <DATA>);
+        print $FHR `cat hardware.txt` . "\n";
         print $FHR $result_report_md;
         close $FHR;
     }
@@ -200,3 +202,10 @@ sub main {
 
 # ------------------------------------------------------------------------------
 main();
+
+__DATA__
+Comparison of languages for speed by calculation of factorial in different languages
+====================================================================================
+
+Hardware:
+---------
