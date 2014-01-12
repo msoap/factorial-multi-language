@@ -1,6 +1,6 @@
 /*
-    @@@ get_version: rust --version | grep rust | grep -Eo '\d+\.\d+'
-    @@@ before: rust build fact.rs
+    @@@ get_version: rustc --version | grep rust | grep -Eo '\d+\.\d+'
+    @@@ before: rustc fact.rs
     @@@ instead: ./fact
     @@@ after: rm fact; rm -rf fact.dSYM/
     @@@ is_fast: 1
@@ -20,12 +20,12 @@ fn fact(n: uint) -> uint {
 // ----------------------------------------------
 fn main() {
     let mut ok: bool = true;
-    let mut i = 0;
+    let mut i: uint = 0;
 
     while i <= times {
         ok = ok && fact(16) == fact_16;
         i += 1;
     }
 
-    println(fmt!("Rust finish %d - %s", times as int, if ok {"ok"} else {"fail"}));
+    println!("Rust finish {:i} - {:s}", times as int, if ok {"ok"} else {"fail"});
 }

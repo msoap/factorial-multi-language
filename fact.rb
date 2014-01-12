@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-# @@@ get_version: ruby --version | awk '{print $2}'
+# @@@ get_version: ruby --version | awk '{print $2}' | perl -pe 's/p\d+$//'
 
-times = 1000000
+times = 5000000
 fact_16 = 20922789888000
 
 def fact(n)
