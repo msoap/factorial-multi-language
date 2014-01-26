@@ -11,6 +11,7 @@ use Data::Dumper;
 
 our $report_data = 'report.dat';
 our $report_markdown = 'README.md';
+our $COUNT_EXEC_EACH_LANG = 10;
 our $MAX_GOOGLE_CHART_API_SQUARE = 300_000; # maximum square of google chart
 
 our %is_fast;
@@ -53,6 +54,7 @@ sub get_info_for_lang_src {
 sub calc {
     my %result;
 
+    LANG:
     for my $exe (sort glob 'fact*.*') {
         next unless -f $exe && -r $exe;
 
@@ -62,21 +64,27 @@ sub calc {
 
         print "$exe ";
 
-        my $output = '';
+        my ($output, $elapsed, $name, $times) = ('', 0, undef, undef);
 
-        my $t0 = [gettimeofday()];
-        if (exists $exe_info->{instead}) {
-            $output = qx"$exe_info->{instead}";
-        } else {
-            $output = qx"./$exe";
-        }
-        my $elapsed = tv_interval ($t0, [gettimeofday()]);
+        for (1 .. $COUNT_EXEC_EACH_LANG) {
+            my $t0 = [gettimeofday()];
+            if (exists $exe_info->{instead}) {
+                $output = qx"$exe_info->{instead}";
+            } else {
+                $output = qx"./$exe";
+            }
+            $elapsed += tv_interval ($t0, [gettimeofday()]);
 
-        my ($name, $times) = $output =~ /^([\.\w]+) \s+ finish \s+ (\d+) \s+ - \s+ ok\s*$/x if $output;
-        unless ($name && $times) {
-            warn " fail ($output)\n";
-            next;
+            ($name, $times) = $output =~ /^([\.\w]+) \s+ finish \s+ (\d+) \s+ - \s+ ok\s*$/x if $output;
+            unless ($name && $times) {
+                warn " fail ($output)\n";
+                next LANG;
+            }
+            print ".";
         }
+        print " ";
+
+        $elapsed /= $COUNT_EXEC_EACH_LANG;
         $name .= ' ' . $exe_info->{name_suffix} if exists $exe_info->{name_suffix};
 
         my $times_per_seconds = $times / $elapsed;
