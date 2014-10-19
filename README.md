@@ -14,7 +14,7 @@ Report:
   * Dart: 1.3.0
   * Go: 1.3.3
   * Haskell: 7.8.3
-  * JavascriptCore: 7.1
+  * JavascriptCore: 8.0
   * OCaml: 4.01.0
   * PyPy: 2.4.0
   * Rust: 0.12
