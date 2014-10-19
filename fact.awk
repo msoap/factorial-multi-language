@@ -1,7 +1,7 @@
 #!/usr/bin/env awk -f
 
-# @@@ get_version: awk --version | awk 'FNR == 1 {print $3}'
-# @@@ instead: awk -f fact.awk
+# @@@ get_version: /usr/bin/awk --version | /usr/bin/awk '{print $3}'
+# @@@ instead: /usr/bin/awk -f fact.awk
 
 function fact(n) {
     if (n == 1)
