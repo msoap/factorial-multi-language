@@ -19,4 +19,4 @@
     recur_loop(N, RES) -> (?FACT_16 == fact(16)) and recur_loop(N-1, RES).
 
 	main() ->
-        io:fwrite("Erlang finish ~.b - ~.s ~n", [?TIMES, ?IF(recur_loop(?TIMES, true), "ok", "fail")]).
+        io:fwrite("Erlang finish ~b - ~s ~n", [?TIMES, ?IF(recur_loop(?TIMES, true), "ok", "fail")]).
