@@ -1,12 +1,13 @@
 /*
     @@@ get_version: rustc --version | grep rust | grep -Eo '\d+\.\d+'
-    @@@ before: rustc fact.rs
+    @@@ before: rustc -O fact.rs
     @@@ instead: ./fact
     @@@ after: rm fact
     @@@ is_fast: 1
+    @@@ skip_chart: 1
 */
 
-static TIMES: uint = 50_000_000;
+static TIMES: uint = 500_000_000_000;
 static FACT_16: uint = 20_922_789_888_000;
 
 // ----------------------------------------------
