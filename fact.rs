@@ -1,5 +1,5 @@
 /*
-    @@@ get_version: rustc --version | grep rust | grep -Eo '\d+\.\d+'
+    @@@ get_version: rustc --version | awk '{print $2}'
     @@@ before: rustc -O fact.rs
     @@@ instead: ./fact
     @@@ after: rm fact
@@ -7,11 +7,11 @@
     @@@ skip_chart: 1
 */
 
-static TIMES: uint = 500_000_000_000;
-static FACT_16: uint = 20_922_789_888_000;
+static TIMES: usize = 500_000_000_000;
+static FACT_16: usize = 20_922_789_888_000;
 
 // ----------------------------------------------
-fn fact(n: uint) -> uint {
+fn fact(n: usize) -> usize {
     return match n {
         0 | 1 => { 1 }
         _ => { n * fact(n - 1) }
@@ -21,12 +21,12 @@ fn fact(n: uint) -> uint {
 // ----------------------------------------------
 fn main() {
     let mut ok: bool = true;
-    let mut i: uint = 0;
+    let mut i: usize = 0;
 
     while i <= TIMES {
         ok = ok && fact(16) == FACT_16;
         i += 1;
     }
 
-    println!("Rust finish {:i} - {:s}", TIMES as int, if ok {"ok"} else {"fail"});
+    println!("Rust finish {} - {}", TIMES, if ok {"ok"} else {"fail"});
 }
