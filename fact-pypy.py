@@ -5,7 +5,7 @@
 # @@@ is_fast: 1
 # @@@ skip_chart: 1
 
-times = 1000000000
+times = 50000000
 fact_16 = 20922789888000
 
 def fact(n):
