@@ -3,7 +3,6 @@
 
 # @@@ get_version: pypy --version 2>&1 | awk 'NR == 2 {print $2}'
 # @@@ is_fast: 1
-# @@@ skip_chart: 1
 
 times = 50000000
 fact_16 = 20922789888000
