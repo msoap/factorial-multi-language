@@ -1,4 +1,4 @@
-// @@@ get_version: swiftc --version | awk 'NR == 1 {print $3}'
+// @@@ get_version: swiftc --version | awk 'NR == 1 {print $4}'
 // @@@ before: swiftc -O fact.swift
 // @@@ instead: ./fact
 // @@@ after: rm fact
