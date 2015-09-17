@@ -16,11 +16,11 @@ func fact(n: Int64) -> Int64 {
 
 func main() {
     var ok = true
-    for i in 1...times {
+    for _ in 1...times {
         ok = ok && fact(16) == fact_16
     }
 
-    println("Swift finish " + String(times) + " - " + (ok ? "ok" : "fail"))
+    print("Swift finish " + String(times) + " - " + (ok ? "ok" : "fail"))
 }
 
 main()
