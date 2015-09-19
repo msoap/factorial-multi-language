@@ -20,4 +20,4 @@ for (var i = 0; i < times; i++) {
     ok = ok && fact(16) == fact_16;
 };
 
-console.log('node.js finish ' + times + ' - ' + (ok ? 'ok' : 'fail'));
+console.log(`node.js finish ${times} - ${ok ? 'ok' : 'fail'}`);
