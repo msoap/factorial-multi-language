@@ -159,8 +159,8 @@ sub create_report {
     push @result_report_md, "### report $name:\n";
     for my $lang (sort {$stat->{$b} <=> $stat->{$a}} keys %$stat) {
         my $rps = $stat->{$lang};
-        my $gistogr_line = '*' x (70 * $rps / $max_rps);
-        printf "%15s - %8i rps: %s\n", $lang, $rps, $gistogr_line;
+        my $gistogr_line = '■' x (70 * $rps / $max_rps);
+        printf "%15s - %9i rps: %s\n", $lang, $rps, $gistogr_line;
     }
     printf "\n";
 
