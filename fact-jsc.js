@@ -2,7 +2,7 @@
 // ln -s /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc ~/bin/
 
 /*
-    @@@ version: 9.0
+    @@@ version: 9.0.1
     @@@ instead: jsc fact-jsc.js
     @@@ is_fast: 1
 */
