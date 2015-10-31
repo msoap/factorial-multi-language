@@ -11,8 +11,8 @@ package main
 import "fmt"
 
 const (
-	times          = 150000000
-	fact_16 uint64 = 20922789888000
+	times         = 150000000
+	fact16 uint64 = 20922789888000
 )
 
 // ----------------------------------------------
@@ -28,7 +28,7 @@ func main() {
 	ok := true
 
 	for i := 0; i < times; i++ {
-		ok = ok && fact(16) == fact_16
+		ok = ok && fact(16) == fact16
 	}
 
 	if ok {
