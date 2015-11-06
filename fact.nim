@@ -1,4 +1,4 @@
-#  @@@ get_version: nim --version | awk 'NR == 1 {print $4}'
+#  @@@ get_version: nim --version 2>&1 | awk 'NR == 1 {print $4}'
 #  @@@ before: nim c fact.nim
 #  @@@ instead: ./fact
 #  @@@ after: rm -rf fact nimcache
