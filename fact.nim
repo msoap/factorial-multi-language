@@ -2,6 +2,7 @@
 #  @@@ before: nim c fact.nim
 #  @@@ instead: ./fact
 #  @@@ after: rm -rf fact nimcache
+#  @@@ is_fast: 1
 
 # with:
 #   nim c -d:release fact.nim

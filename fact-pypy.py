@@ -2,9 +2,8 @@
 # -*- coding: utf8 -*-
 
 # @@@ get_version: pypy --version 2>&1 | awk 'NR == 2 {print $2}'
-# @@@ is_fast: 1
 
-times = 50000000
+times = 10000000
 fact_16 = 20922789888000
 
 def fact(n):
