@@ -1,6 +1,6 @@
 #!/usr/bin/env perl6
 
-# @@@ get_version: perl6 -v | perl -pE 's/This \s+ is \s+ perl6 \s+ version \s+//x'
+# @@@ get_version: perl6 -v | perl6 -ne 's/This \s+ is \s+ Rakudo \s+ version \s+//; $_.say; last'
 # @@@ skip_chart: 1
 
 my Int $times = 300_000;

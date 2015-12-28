@@ -29,7 +29,7 @@ Report:
   * nim: 0.12.0
   * node.js: 5.2.0
   * perl: 5.18.2
-  * perl6: 2015.11 built on MoarVM version 2015.11
+  * perl6: 2015.12 built on MoarVM version 2015.12
   * php: 5.5.29
   * python: 2.7.10
   * python3: 3.5.1
@@ -60,7 +60,7 @@ Report:
     nim: 4.049 sec for 10000000 = 2469669.983 rps
     node.js: 6.076 sec for 50000000 = 8228552.997 rps
     perl: 4.265 sec for 1000000 = 234473.246 rps
-    perl6: 13.168 sec for 300000 = 22782.935 rps
+    perl6: 13.741 sec for 300000 = 21832.472 rps
     php: 2.042 sec for 1000000 = 489699.418 rps
     python: 4.814 sec for 2000000 = 415477.691 rps
     python3: 6.571 sec for 2000000 = 304345.064 rps
