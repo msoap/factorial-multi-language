@@ -39,36 +39,36 @@ Report:
 
 ### raw data:
 
-    C: 7.672 sec for 100000000 = 13033844.776 rps
-    C gcc -O1: 4.046 sec for 500000000 = 123578867.737 rps
-    C gcc -O2: 0.007 sec for 9000000000 = 1343564326874.272 rps
-    CoffeeScript: 5.702 sec for 50000000 = 8769109.710 rps
-    D: 4.314 sec for 100000000 = 23177911.376 rps
-    Dart: 7.163 sec for 200000000 = 27921083.904 rps
-    Erlang: 5.780 sec for 7000000 = 1210980.353 rps
-    Go: 9.840 sec for 150000000 = 15243790.434 rps
-    Go-cgo: 3.943 sec for 20000000 = 5072135.788 rps
-    Go-mt: 3.170 sec for 150000000 = 47320092.793 rps
-    Haskell: 10.759 sec for 10000000 = 929420.685 rps
-    Java: 6.076 sec for 300000000 = 49375050.928 rps
-    JavascriptCore: 3.463 sec for 50000000 = 14436654.041 rps
-    OCaml: 7.143 sec for 150000000 = 21000730.447 rps
-    Pascal: 4.251 sec for 100000000 = 23524397.470 rps
-    PyPy: 5.508 sec for 10000000 = 1815704.306 rps
-    Rust: 4.194 sec for 3000000000000 = 715338539328.776 rps
-    Swift: 5.597 sec for 200000000 = 35732558.451 rps
-    awk: 3.156 sec for 1000000 = 316826.202 rps
-    gawk: 3.878 sec for 1000000 = 257881.603 rps
-    lua: 3.084 sec for 3000000 = 972845.010 rps
-    luajit: 3.536 sec for 50000000 = 14141684.862 rps
-    nim: 3.999 sec for 10000000 = 2500555.436 rps
-    node.js: 6.149 sec for 50000000 = 8131171.539 rps
-    perl: 4.200 sec for 1000000 = 238092.800 rps
-    perl6: 13.005 sec for 300000 = 23067.316 rps
-    php: 2.028 sec for 1000000 = 493148.466 rps
-    python: 4.751 sec for 2000000 = 420967.587 rps
-    python3: 6.471 sec for 2000000 = 309050.447 rps
-    ruby: 5.788 sec for 5000000 = 863823.764 rps
+    C: 7.672 sec for 100000000 = 13033844 rps
+    C gcc -O1: 4.046 sec for 500000000 = 123578867 rps
+    C gcc -O2: 0.007 sec for 9000000000 = 1343564326874 rps
+    CoffeeScript: 5.702 sec for 50000000 = 8769109 rps
+    D: 4.314 sec for 100000000 = 23177911 rps
+    Dart: 7.163 sec for 200000000 = 27921083 rps
+    Erlang: 5.780 sec for 7000000 = 1210980 rps
+    Go: 9.840 sec for 150000000 = 15243790 rps
+    Go-cgo: 3.943 sec for 20000000 = 5072135 rps
+    Go-mt: 3.170 sec for 150000000 = 47320092 rps
+    Haskell: 10.759 sec for 10000000 = 929420 rps
+    Java: 6.076 sec for 300000000 = 49375050 rps
+    JavascriptCore: 3.463 sec for 50000000 = 14436654 rps
+    OCaml: 7.143 sec for 150000000 = 21000730 rps
+    Pascal: 4.251 sec for 100000000 = 23524397 rps
+    PyPy: 5.508 sec for 10000000 = 1815704 rps
+    Rust: 4.194 sec for 3000000000000 = 715338539328 rps
+    Swift: 5.597 sec for 200000000 = 35732558 rps
+    awk: 3.156 sec for 1000000 = 316826 rps
+    gawk: 3.878 sec for 1000000 = 257881 rps
+    lua: 3.084 sec for 3000000 = 972845 rps
+    luajit: 3.536 sec for 50000000 = 14141684 rps
+    nim: 3.999 sec for 10000000 = 2500555 rps
+    node.js: 6.149 sec for 50000000 = 8131171 rps
+    perl: 4.200 sec for 1000000 = 238092 rps
+    perl6: 13.005 sec for 300000 = 23067 rps
+    php: 2.028 sec for 1000000 = 493148 rps
+    python: 4.751 sec for 2000000 = 420967 rps
+    python3: 6.471 sec for 2000000 = 309050 rps
+    ruby: 5.788 sec for 5000000 = 863823 rps
 
 
 ### report all:

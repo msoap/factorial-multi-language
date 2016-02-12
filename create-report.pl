@@ -88,7 +88,7 @@ sub calc {
         $name .= ' ' . $exe_info->{name_suffix} if exists $exe_info->{name_suffix};
 
         my $times_per_seconds = $times / $elapsed;
-        my $log_line = sprintf "%0.3f sec for %i = %0.3f rps", $elapsed, $times, $times_per_seconds;
+        my $log_line = sprintf "%0.3f sec for %i = %0.0f rps", $elapsed, $times, $times_per_seconds;
 
         $result{$name} = {
             times => $times
@@ -116,7 +116,7 @@ sub create_report {
     unless ($VAR1) {
         open my $FH, '<', $report_data or die "Error open file: $!\n";
         eval join('', <$FH>);
-        die "$report_data is not valid" if $@;
+        die "$report_data is not valid: $@" if $@;
         close $FH;
 
         unless (%is_fast) {
