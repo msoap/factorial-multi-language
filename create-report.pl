@@ -171,7 +171,7 @@ sub create_report {
     $chxl .= "|2:|" . join "|", map {int($stat->{$_}) . ' rps'} sort {$stat->{$a} <=> $stat->{$b}} keys %$stat;
     $chxl .= "|0:|" . join "|", map {$_ * 10 . " %"} 0 .. 10;
     $chxl = uri_escape($chxl);
-    my $height_one = 15;
+    my $height_one = 12;
     my $height = scalar(1 + keys %$stat) * ($height_one + 5) + 5;
     my $width = 700;
 
@@ -181,8 +181,9 @@ sub create_report {
     }
 
     my $url = "https://chart.googleapis.com/chart?cht=bhs&chs=${width}x$height&chd=$chd&chco=4d89f9&chbh=$height_one&chds=0,$max_rps&chxt=x,y,r&chxl=$chxl";
-    push @result_report_md, "![Chart for $name]($url)\n\n";
-    system("open", $url) if $^O eq 'darwin';
+    my $width_2 = int($width / 1.5);
+    push @result_report_md, qq/<img alt="Chart for $name" width="$width_2" src="$url">\n\n/;
+    # system("open", $url) if $^O eq 'darwin';
     system("curl -s '$url' > chart_$name.png");
 
     return join("\n", @result_report_md);
