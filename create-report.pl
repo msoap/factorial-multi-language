@@ -75,7 +75,7 @@ sub calc {
             }
             $elapsed += tv_interval ($t0, [gettimeofday()]);
 
-            ($name, $times) = $output =~ /^([\.\w]+) \s+ finish \s+ (\d+) \s+ - \s+ ok\s*$/x if $output;
+            ($name, $times) = $output =~ /^([\.\-\w]+) \s+ finish \s+ (\d+) \s+ - \s+ ok\s*$/x if $output;
             unless ($name && $times) {
                 warn " fail ($output)\n";
                 next LANG;
