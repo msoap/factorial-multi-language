@@ -17,7 +17,7 @@ fun fact(n: Long): Long {
         return 1
     return n * fact(n - 1)
 }
- 
+
 fun main(args: Array<String>) {
     var ok: Boolean = true
 
