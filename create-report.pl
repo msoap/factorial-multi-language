@@ -1,5 +1,18 @@
 #!/usr/bin/perl
 
+=head1
+
+Calculate stat:
+    ./create-report.pl --calc
+
+Calculate stat without cache:
+    CACHE_NO=1 ./create-report.pl --calc
+
+Create report:
+	./create-report.pl --create
+
+=cut
+
 use v5.10;
 use strict;
 use warnings;
@@ -51,14 +64,36 @@ sub get_info_for_lang_src {
 }
 
 # ------------------------------------------------------------------------------
+sub load_cache {
+    state $VAR1;
+
+    unless (ref($VAR1) eq 'HASH' && %$VAR1) {
+        open my $FH, '<', $report_data or return {};
+        eval join('', <$FH>);
+        die "$report_data is not valid: $@" if $@;
+        close $FH;
+    }
+
+    return $VAR1;
+}
+
+# ------------------------------------------------------------------------------
 sub calc {
     my %result;
+    my $is_changed = 0;
+    my $cache = load_cache();
 
     LANG:
     for my $exe (sort glob 'fact*.*') {
         next unless -f $exe && -r $exe;
 
         my $exe_info = get_info_for_lang_src($exe);
+        my $modify_time_of_exe = (stat($exe))[9];
+
+        next if exists $cache->{$exe}
+             && $cache->{$exe}->{version} eq $exe_info->{version}
+             && $cache->{$exe}->{unix_time} > $modify_time_of_exe
+             && ! $ENV{CACHE_NO};
 
         system($exe_info->{before}) if exists $exe_info->{before};
 
@@ -90,44 +125,49 @@ sub calc {
         my $times_per_seconds = $times / $elapsed;
         my $log_line = sprintf "%0.3f sec for %i = %0.0f rps", $elapsed, $times, $times_per_seconds;
 
-        $result{$name} = {
-            times => $times
+        $result{$exe} = {
+            lang => $name,
+            , times => $times
             , times_per_seconds => $times_per_seconds
             , elapsed => $elapsed
             , log_line => $log_line
+            , unix_time => time()
             , %$exe_info
         };
 
         print "$log_line\n";
 
         system($exe_info->{after}) if exists $exe_info->{after};
+        $is_changed = 1;
     }
 
-    open my $FH, '>', $report_data or die "Error open file: $!\n";
-    print $FH Dumper(\%result);
-    close $FH;
+    if ($is_changed) {
+        # merge cache into result
+        for my $exe (keys %$cache) {
+            if (! exists $result{$exe}) {
+                $result{$exe} = $cache->{$exe};
+            }
+        }
+
+        open my $FH, '>', $report_data or die "Error open file: $!\n";
+        print $FH Dumper(\%result);
+        close $FH;
+    }
 }
 
 # ------------------------------------------------------------------------------
 sub create_report {
     my ($name, %OPT) = @_;
 
-    state $VAR1;
-    unless ($VAR1) {
-        open my $FH, '<', $report_data or die "Error open file: $!\n";
-        eval join('', <$FH>);
-        die "$report_data is not valid: $@" if $@;
-        close $FH;
-
-        unless (%is_fast) {
-            for my $lang (keys %$VAR1) {
-                $is_fast{$lang} = 1 if $VAR1->{$lang}->{is_fast};
-            }
+    my $VAR1 = load_cache();
+    unless (%is_fast) {
+        for my $exe (keys %$VAR1) {
+            $is_fast{$exe} = 1 if $VAR1->{$exe}->{is_fast};
         }
     }
 
     # grep by speed
-    my $stat = {map {$_ => $VAR1->{$_}->{times_per_seconds}}
+    my $stat = {map {$VAR1->{$_}->{lang} => $VAR1->{$_}->{times_per_seconds}}
                 grep {$OPT{grep}->($_) && ! $VAR1->{$_}->{skip_chart}}
                 keys %$VAR1
                };
@@ -139,18 +179,18 @@ sub create_report {
     if ($OPT{add_versions}) {
         push @result_report_md, "### versions:\n";
         my %exists_versions;
-        for my $lang (sort keys %$VAR1) {
-            next if $exists_versions{$VAR1->{$lang}->{version}};
-            push @result_report_md, "  * $lang: $VAR1->{$lang}->{version}";
-            $exists_versions{$VAR1->{$lang}->{version}}++;
+        for my $exe (sort {$VAR1->{$a}->{lang} cmp $VAR1->{$b}->{lang}} keys %$VAR1) {
+            next if $exists_versions{$VAR1->{$exe}->{version}};
+            push @result_report_md, "  * $VAR1->{$exe}->{lang}: $VAR1->{$exe}->{version}";
+            $exists_versions{$VAR1->{$exe}->{version}}++;
         }
         push @result_report_md, "\n";
     }
 
     if ($OPT{add_raw}) {
         push @result_report_md, "### raw data:\n";
-        for my $lang (sort keys %$VAR1) {
-            push @result_report_md, "    $lang: $VAR1->{$lang}->{log_line}";
+        for my $exe (sort {$VAR1->{$a}->{lang} cmp $VAR1->{$b}->{lang}} keys %$VAR1) {
+            push @result_report_md, "    $VAR1->{$exe}->{lang}: $VAR1->{$exe}->{log_line}";
         }
         push @result_report_md, "\n";
     }
@@ -234,3 +274,4 @@ See also
   * [Wikipedia](http://en.wikipedia.org/wiki/Factorial)
   * [Rosettacode](http://rosettacode.org/wiki/Factorial)
   * [Stackoverflow](http://stackoverflow.com/questions/23930/factorial-algorithms-in-different-languages)
+  * [Benchmark of Fibonacci in OOP](https://github.com/Balancer/benchmarks-fib-obj)
