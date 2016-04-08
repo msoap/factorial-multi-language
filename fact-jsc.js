@@ -2,7 +2,7 @@
 // ln -s /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc ~/bin/
 
 /*
-    @@@ version: 9.1
+    @@@ get_version: osascript -e 'tell application "Safari" to get version'
     @@@ instead: jsc fact-jsc.js
     @@@ is_fast: 1
 */
