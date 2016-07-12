@@ -1,6 +1,7 @@
 package main
 
 /*
+   @@@ common_lang: Go
    @@@ get_version: go version | awk '{print $3}' | sed 's/go//'
    @@@ before: go build fact-cgo.go
    @@@ instead: ./fact-cgo

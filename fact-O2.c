@@ -1,4 +1,5 @@
 /*
+    @@@ common_lang: C
     @@@ get_version: gcc --version 2>/dev/null| grep -E 'gcc|version'
     @@@ before: gcc -O2 -o fact_c fact-O2.c
     @@@ instead: ./fact_c

@@ -34,6 +34,7 @@ our %is_fast;
 =head2 get_info_for_lang_src
 
 Parse meta info from source files
+    @@@ common_lang: LangName
     @@@ version: language version
     @@@ get_version: <shell command for get version>
     @@@ before: <shell command for exec before measurement, for example compilation>
@@ -178,11 +179,12 @@ sub create_report {
 
     if ($OPT{add_versions}) {
         push @result_report_md, "### versions:\n";
-        my %exists_versions;
+        my %exists_lang;
         for my $exe (sort {$VAR1->{$a}->{lang} cmp $VAR1->{$b}->{lang}} keys %$VAR1) {
-            next if $exists_versions{$VAR1->{$exe}->{version}};
+            my $lang = $VAR1->{$exe}->{common_lang} // $VAR1->{$exe}->{lang};
+            next if $exists_lang{$lang};
             push @result_report_md, "  * $VAR1->{$exe}->{lang}: $VAR1->{$exe}->{version}";
-            $exists_versions{$VAR1->{$exe}->{version}}++;
+            $exists_lang{$lang}++;
         }
         push @result_report_md, "\n";
     }
