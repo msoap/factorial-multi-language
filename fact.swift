@@ -11,13 +11,13 @@ func fact(n: Int64) -> Int64 {
     if n == 1 {
         return 1
     }
-    return n * fact(n - 1)
+    return n * fact(n: n - 1)
 }
 
 func main() {
     var ok = true
     for _ in 1...times {
-        ok = ok && fact(16) == fact_16
+        ok = ok && fact(n: 16) == fact_16
     }
 
     print("Swift finish " + String(times) + " - " + (ok ? "ok" : "fail"))
