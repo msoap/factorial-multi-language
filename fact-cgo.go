@@ -21,7 +21,7 @@ import "C"
 import "fmt"
 
 const (
-	times         = 20000000
+	times         = 50000000
 	fact16 uint64 = 20922789888000
 )
 
