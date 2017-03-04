@@ -2,9 +2,9 @@
 before run need exec:
     docker-machine start; eval "$(docker-machine env default)"
 
-    @@@ get_version: docker run --rm -v "$PWD":/app -w /app java:8 java -version 2>&1 | awk 'NR == 1 {print $3}' | sed 's/"//g; s/-internal//'
-    @@@ before: docker run --rm -v "$PWD":/app -w /app java:8 javac fact.java
-    @@@ instead: docker run --rm -v "$PWD":/app -w /app java:8 java fact
+    @@@ get_version: docker run --rm -v "$PWD":/app -w /app java:alpine java -version 2>&1 | awk 'NR == 1 {print $3}' | sed 's/"//g; s/-internal//'
+    @@@ before: docker run --rm -v "$PWD":/app -w /app java:alpine javac fact.java
+    @@@ instead: docker run --rm -v "$PWD":/app -w /app java:alpine java fact
     @@@ after: rm fact.class
     @@@ is_fast: 1
 */
