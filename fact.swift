@@ -20,7 +20,7 @@ func main() {
         ok = ok && fact(n: 16) == fact_16
     }
 
-    print("Swift finish " + String(times) + " - " + (ok ? "ok" : "fail"))
+    print("Swift finish \(times) -  \(ok ? "ok" : "fail")")
 }
 
 main()
