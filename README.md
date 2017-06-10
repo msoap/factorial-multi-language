@@ -22,7 +22,7 @@ Report:
   * OCaml: 4.04.1
   * Pascal: 3.0.2
   * PyPy: 5.8.0
-  * Rust: 1.17.0
+  * Rust: 1.18.0
   * Swift: 3.1
   * awk: 20070501
   * gawk: 4.1.4
@@ -57,7 +57,7 @@ Report:
     OCaml: 7.567 sec for 150000000 = 19823787 rps
     Pascal: 4.704 sec for 100000000 = 21257187 rps
     PyPy: 5.791 sec for 10000000 = 1726823 rps
-    Rust: 3.158 sec for 70000000000 = 22162712876 rps
+    Rust: 3.379 sec for 70000000000 = 20717693458 rps
     Swift: 7.967 sec for 200000000 = 25103559 rps
     awk: 3.201 sec for 1000000 = 312420 rps
     gawk: 4.133 sec for 1000000 = 241950 rps
