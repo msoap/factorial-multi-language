@@ -2,7 +2,7 @@
 <?php
     # @@@ get_version: php --version | awk 'FNR == 1 {print $2}'
 
-    $times = 1000000;
+    $times = 7000000;
     $fact_16 = 20922789888000;
 
     function fact($n) {
