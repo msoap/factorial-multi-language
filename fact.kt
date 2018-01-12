@@ -1,10 +1,7 @@
 /*
-before run need exec:
-    docker-machine start; eval "$(docker-machine env default)"
-
-    @@@ get_version: docker run --rm supermina999/alpine-kotlin kotlinc -version 2>&1 | awk '{print $5}'
-    @@@ before: docker run --rm -v "$PWD":/app -w /app supermina999/alpine-kotlin kotlinc fact.kt
-    @@@ instead: docker run --rm -v "$PWD":/app -w /app supermina999/alpine-kotlin kotlin FactKt
+    @@@ get_version: docker run --rm zenika/alpine-kotlin kotlinc -version 2>&1 | awk '{print $3}'
+    @@@ before: docker run --rm -v "$PWD":/app -w /app zenika/alpine-kotlin kotlinc fact.kt
+    @@@ instead: docker run --rm -v "$PWD":/app -w /app zenika/alpine-kotlin kotlin FactKt
     @@@ after: rm -rf FactKt.class ./META-INF
     @@@ is_fast: 1
 */
