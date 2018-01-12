@@ -1,7 +1,4 @@
 /*
-before run need exec:
-    docker-machine start; eval "$(docker-machine env default)"
-
     @@@ get_version: docker run --rm -v "$PWD":/app -w /app openjdk:9-slim java -version 2>&1 | awk 'NR == 2 {print $5}' | sed 's/)//g'
     @@@ before: docker run --rm -v "$PWD":/app -w /app openjdk:9-slim javac fact.java
     @@@ instead: docker run --rm -v "$PWD":/app -w /app openjdk:9-slim java fact
