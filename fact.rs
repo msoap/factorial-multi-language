@@ -1,13 +1,12 @@
 /*
     @@@ get_version: rustc --version | awk '{print $2}'
-    @@@ before: rustc -O fact.rs
+    @@@ before: rustc fact.rs
     @@@ instead: ./fact
     @@@ after: rm fact
     @@@ is_fast: 1
-    @@@ skip_chart: 1
 */
 
-static TIMES: usize = 70_000_000_000;
+static TIMES: usize = 20_000_000;
 static FACT_16: usize = 20_922_789_888_000;
 
 // ----------------------------------------------
