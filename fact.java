@@ -1,7 +1,7 @@
 /*
-    @@@ get_version: docker run --rm -v "$PWD":/app -w /app openjdk:9-slim java -version 2>&1 | awk 'NR == 2 {print $5}' | sed 's/)//g'
-    @@@ before: docker run --rm -v "$PWD":/app -w /app openjdk:9-slim javac fact.java
-    @@@ instead: docker run --rm -v "$PWD":/app -w /app openjdk:9-slim java fact
+    @@@ get_version: docker run --rm -v "$PWD":/app -w /app openjdk:10-slim java -version 2>&1 | awk 'NR == 2 {print $5}' | sed 's/)//g'
+    @@@ before: docker run --rm -v "$PWD":/app -w /app openjdk:10-slim javac fact.java
+    @@@ instead: docker run --rm -v "$PWD":/app -w /app openjdk:10-slim java fact
     @@@ after: rm fact.class
     @@@ is_fast: 1
 */
@@ -16,9 +16,9 @@ public class fact {
     }
 
     public static void main(String[] args) {
-        boolean ok = true;
+        var ok = true;
 
-        for (long i = 0; i < times; i++) {
+        for (var i = 0L; i < times; i++) {
             ok = ok && fact(16) == fact16;
         }
 
