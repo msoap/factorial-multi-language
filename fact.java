@@ -1,5 +1,5 @@
 /*
-    @@@ get_version: docker run --rm -v "$PWD":/app -w /app openjdk:11-slim java -version 2>&1 | awk 'NR == 2 {print $5}' | sed 's/)//g'
+    @@@ get_version: docker run --rm -v "$PWD":/app -w /app openjdk:11-slim java -version 2>&1 | awk '$2 == "version" {print $3}' | sed 's/"//g'
     @@@ before: docker run --rm -v "$PWD":/app -w /app openjdk:11-slim javac fact.java
     @@@ instead: docker run --rm -v "$PWD":/app -w /app openjdk:11-slim java fact
     @@@ after: rm fact.class
