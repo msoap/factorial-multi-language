@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-    # @@@ get_version: php --version | awk 'FNR == 1 {print $2}'
+    # @@@ get_version: php --version | awk 'FNR == 4 {print $2}' | grep -Eo '\d+\.\d+\.\d+'
 
     $times = 7000000;
     $fact_16 = 20922789888000;
