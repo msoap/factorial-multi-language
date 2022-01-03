@@ -1,5 +1,5 @@
 #  @@@ get_version: nim --version 2>&1 | awk 'NR == 1 {print $4}'
-#  @@@ before: nim c fact.nim
+#  @@@ before: nim -d:release c fact.nim
 #  @@@ instead: ./fact
 #  @@@ after: rm -rf fact nimcache
 #  @@@ is_fast: 1
@@ -8,7 +8,7 @@
 #   nim c -d:release fact.nim
 # programm fast with any "times"
 
-const times = 10_000_000
+const times = 30_000_000
 const fact_16 = 20_922_789_888_000
 
 proc fact(n: int): int =
