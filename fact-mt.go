@@ -11,7 +11,6 @@ package main
 
 import (
 	"fmt"
-	"runtime"
 )
 
 const (
@@ -30,7 +29,6 @@ func fact(n uint64) uint64 {
 
 // ----------------------------------------------
 func main() {
-	runtime.GOMAXPROCS(threads)
 	ok := true
 	ch := make(chan bool)
 
