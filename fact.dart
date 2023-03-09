@@ -1,6 +1,6 @@
 #!/usr/bin/env dart
 
-// @@@ get_version: dart --version 2>&1 | awk '{print $4}' | perl -pe 's/_.+$//'
+// @@@ get_version: dart --version 2>&1 | awk '{print $4}' | perl -pe 's/-.+$//'
 // @@@ is_fast: 1
 
 const times = 200000000;

@@ -1,5 +1,5 @@
 // Safari engine, for use:
-// ln -s /System/Library/Frameworks/JavaScriptCore.framework/Versions/A/Resources/jsc ~/bin/
+// ln -s /System/Library/Frameworks/JavaScriptCore.framework/Versions/Current/Helpers/jsc ~/bin/
 
 /*
     @@@ get_version: osascript -e 'tell application "Safari" to get version'
