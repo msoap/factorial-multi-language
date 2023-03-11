@@ -3,87 +3,80 @@ Comparison of languages for speed by calculation of factorial in different langu
 
 Hardware:
 ---------
-2.4 GHz Intel Core i5 (haswell)
+Apple M1 Pro / 3.2 GHz / 8 Cores
+
 
 Report:
 -------
 ### versions:
 
-  * C: Apple clang version 12.0.5 (clang-1205.0.22.9)
-  * CoffeeScript: 1.10.0
-  * D: 2.102.2
-  * Dart: 2.17.7
-  * Erlang: 13.1.5
+  * C: Apple clang version 14.0.0 (clang-1400.0.29.202)
+  * Dart: 3.0.0
+  * Erlang: 13.2
   * Go: 1.20.2
   * Haskell: 9.4.4
-  * Java: 18-ea
+  * Java: 18.0.2.1
   * JavascriptCore: 16.3
-  * Kotlin: 1.4.10
   * OCaml: 4.14.0
   * Pascal: 3.2.2
   * PyPy: 7.3.11
   * Rust: 1.67.1
-  * Swift: 5.4
+  * Swift: 5.7.2
   * awk: 20200816
   * gawk: 5.2.1
   * lua: 5.4.4
   * luajit: 2.1.0-beta3
-  * nim: 1.6.10
+  * nim: 1.6.12
   * node.js: 19.7.0
-  * perl: 5.30.2
-  * perl6: Welcome to Rakudo™ v2023.02.
-  * php: 7.3.29
-  * python: 2.7.16
-  * python3: 3.8.2
+  * perl: 5.30.3
+  * perl6: v2023.02.
+  * php: 8.2.3
+  * python3: 3.11.2
   * ruby: 2.6.10
 
 
 ### raw data:
 
-    C: 7.660 sec for 100000000 = 13054503 rps
-    C gcc -O1: 16.503 sec for 500000000 = 30297896 rps
-    C gcc -O2: 0.407 sec for 9000000000 = 22091641529 rps
-    CoffeeScript: 5.770 sec for 50000000 = 8665196 rps
-    D: 5.417 sec for 100000000 = 18459145 rps
-    Dart: 7.419 sec for 200000000 = 26958351 rps
-    Erlang: 3.739 sec for 7000000 = 1872007 rps
-    Go: 5.537 sec for 150000000 = 27088964 rps
-    Go-cgo: 4.197 sec for 50000000 = 11914670 rps
-    Go-mt: 2.088 sec for 150000000 = 71836541 rps
-    Haskell: 9.312 sec for 10000000 = 1073870 rps
-    Java: 7.222 sec for 300000000 = 41540572 rps
-    JavascriptCore: 3.500 sec for 50000000 = 14287234 rps
-    Kotlin: 5.317 sec for 200000000 = 37617803 rps
-    OCaml: 7.025 sec for 150000000 = 21353268 rps
-    Pascal: 4.578 sec for 100000000 = 21844709 rps
-    PyPy: 5.835 sec for 10000000 = 1713702 rps
-    Rust: 2.322 sec for 20000000 = 8613383 rps
-    Swift: 7.223 sec for 200000000 = 27691041 rps
-    awk: 3.083 sec for 1000000 = 324411 rps
-    gawk: 4.987 sec for 1000000 = 200515 rps
-    lua: 2.006 sec for 3000000 = 1495760 rps
-    luajit: 4.932 sec for 50000000 = 10138590 rps
-    nim: 1.132 sec for 30000000 = 26490702 rps
-    node.js: 6.902 sec for 50000000 = 7243957 rps
-    perl: 3.556 sec for 1000000 = 281198 rps
-    perl6: 2.573 sec for 300000 = 116596 rps
-    php: 4.967 sec for 7000000 = 1409200 rps
-    python: 4.630 sec for 2000000 = 431987 rps
-    python3: 7.042 sec for 2000000 = 284013 rps
-    ruby: 3.836 sec for 5000000 = 1303594 rps
+    C: 2.941 sec for 100000000 = 33999417 rps
+    C gcc -O1: 10.704 sec for 500000000 = 46712193 rps
+    C gcc -O2: 0.968 sec for 9000000000 = 9298792521 rps
+    Dart: 8.382 sec for 200000000 = 23859737 rps
+    Erlang: 2.100 sec for 7000000 = 3333282 rps
+    Go: 3.289 sec for 150000000 = 45602860 rps
+    Go-cgo: 3.074 sec for 50000000 = 16265199 rps
+    Go-mt: 0.551 sec for 150000000 = 272089199 rps
+    Haskell: 7.522 sec for 10000000 = 1329470 rps
+    Java: 3.214 sec for 300000000 = 93339911 rps
+    JavascriptCore: 4.068 sec for 50000000 = 12290086 rps
+    OCaml: 4.546 sec for 150000000 = 32993025 rps
+    Pascal: 2.931 sec for 100000000 = 34123098 rps
+    PyPy: 3.091 sec for 10000000 = 3235669 rps
+    Rust: 0.864 sec for 20000000 = 23138520 rps
+    Swift: 4.362 sec for 200000000 = 45851835 rps
+    awk: 2.393 sec for 1000000 = 417936 rps
+    gawk: 1.635 sec for 1000000 = 611578 rps
+    lua: 1.797 sec for 3000000 = 1669234 rps
+    luajit: 3.356 sec for 50000000 = 14897824 rps
+    nim: 1.113 sec for 30000000 = 26961833 rps
+    node.js: 7.248 sec for 50000000 = 6898630 rps
+    perl: 2.182 sec for 1000000 = 458388 rps
+    perl6: 1.406 sec for 300000 = 213416 rps
+    php: 3.714 sec for 7000000 = 1884681 rps
+    python3: 1.827 sec for 2000000 = 1094897 rps
+    ruby: 3.953 sec for 5000000 = 1264967 rps
 
 
 ### report all:
 
-<img alt="Chart for all" width="388" src="https://chart.googleapis.com/chart?cht=bhs&chs=582x515&chd=t%3A71836541%2C41540571%2C37617802%2C30297896%2C27691040%2C27088964%2C26958351%2C26490702%2C21844708%2C21353267%2C18459145%2C14287234%2C13054502%2C11914670%2C10138590%2C8665196%2C8613383%2C7243957%2C1872006%2C1713701%2C1495759%2C1409199%2C1303594%2C1073870%2C431986%2C324410%2C284012%2C281197%2C200514&chco=4d89f9&chbh=12&chds=0,71836541.4095996&chxt=x,y,r&chxl=1%3A%7Cgawk%7Cperl%7Cpython3%7Cawk%7Cpython%7CHaskell%7Cruby%7Cphp%7Clua%7CPyPy%7CErlang%7Cnode.js%7CRust%7CCoffeeScript%7Cluajit%7CGo-cgo%7CC%7CJavascriptCore%7CD%7COCaml%7CPascal%7Cnim%7CDart%7CGo%7CSwift%7CC%20gcc%20-O1%7CKotlin%7CJava%7CGo-mt%7C2%3A%7C200514%20rps%7C281197%20rps%7C284012%20rps%7C324410%20rps%7C431986%20rps%7C1073870%20rps%7C1303594%20rps%7C1409199%20rps%7C1495759%20rps%7C1713701%20rps%7C1872006%20rps%7C7243957%20rps%7C8613383%20rps%7C8665196%20rps%7C10138590%20rps%7C11914670%20rps%7C13054502%20rps%7C14287234%20rps%7C18459145%20rps%7C21353267%20rps%7C21844708%20rps%7C26490702%20rps%7C26958351%20rps%7C27088964%20rps%7C27691040%20rps%7C30297896%20rps%7C37617802%20rps%7C41540571%20rps%7C71836541%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25">
+<img alt="Chart for all" width="447" src="https://chart.googleapis.com/chart?cht=bhs&chs=671x447&chd=t%3A272089198%2C93339911%2C46712193%2C45851834%2C45602859%2C34123097%2C33999417%2C32993024%2C26961832%2C23859737%2C23138520%2C16265199%2C14897824%2C12290086%2C6898630%2C3333282%2C3235669%2C1884680%2C1669233%2C1329469%2C1264967%2C1094896%2C611578%2C458388%2C417936&chco=4d89f9&chbh=12&chds=0,272089198.820657&chxt=x,y,r&chxl=1%3A%7Cawk%7Cperl%7Cgawk%7Cpython3%7Cruby%7CHaskell%7Clua%7Cphp%7CPyPy%7CErlang%7Cnode.js%7CJavascriptCore%7Cluajit%7CGo-cgo%7CRust%7CDart%7Cnim%7COCaml%7CC%7CPascal%7CGo%7CSwift%7CC%20gcc%20-O1%7CJava%7CGo-mt%7C2%3A%7C417936%20rps%7C458388%20rps%7C611578%20rps%7C1094896%20rps%7C1264967%20rps%7C1329469%20rps%7C1669233%20rps%7C1884680%20rps%7C3235669%20rps%7C3333282%20rps%7C6898630%20rps%7C12290086%20rps%7C14897824%20rps%7C16265199%20rps%7C23138520%20rps%7C23859737%20rps%7C26961832%20rps%7C32993024%20rps%7C33999417%20rps%7C34123097%20rps%7C45602859%20rps%7C45851834%20rps%7C46712193%20rps%7C93339911%20rps%7C272089198%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25">
 
 ### report fast:
 
-<img alt="Chart for fast" width="466" src="https://chart.googleapis.com/chart?cht=bhs&chs=700x328&chd=t%3A71836541%2C41540571%2C37617802%2C30297896%2C27691040%2C27088964%2C26958351%2C26490702%2C21844708%2C21353267%2C18459145%2C14287234%2C13054502%2C11914670%2C10138590%2C8665196%2C8613383%2C7243957&chco=4d89f9&chbh=12&chds=0,71836541.4095996&chxt=x,y,r&chxl=1%3A%7Cnode.js%7CRust%7CCoffeeScript%7Cluajit%7CGo-cgo%7CC%7CJavascriptCore%7CD%7COCaml%7CPascal%7Cnim%7CDart%7CGo%7CSwift%7CC%20gcc%20-O1%7CKotlin%7CJava%7CGo-mt%7C2%3A%7C7243957%20rps%7C8613383%20rps%7C8665196%20rps%7C10138590%20rps%7C11914670%20rps%7C13054502%20rps%7C14287234%20rps%7C18459145%20rps%7C21353267%20rps%7C21844708%20rps%7C26490702%20rps%7C26958351%20rps%7C27088964%20rps%7C27691040%20rps%7C30297896%20rps%7C37617802%20rps%7C41540571%20rps%7C71836541%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25">
+<img alt="Chart for fast" width="466" src="https://chart.googleapis.com/chart?cht=bhs&chs=700x277&chd=t%3A272089198%2C93339911%2C46712193%2C45851834%2C45602859%2C34123097%2C33999417%2C32993024%2C26961832%2C23859737%2C23138520%2C16265199%2C14897824%2C12290086%2C6898630&chco=4d89f9&chbh=12&chds=0,272089198.820657&chxt=x,y,r&chxl=1%3A%7Cnode.js%7CJavascriptCore%7Cluajit%7CGo-cgo%7CRust%7CDart%7Cnim%7COCaml%7CC%7CPascal%7CGo%7CSwift%7CC%20gcc%20-O1%7CJava%7CGo-mt%7C2%3A%7C6898630%20rps%7C12290086%20rps%7C14897824%20rps%7C16265199%20rps%7C23138520%20rps%7C23859737%20rps%7C26961832%20rps%7C32993024%20rps%7C33999417%20rps%7C34123097%20rps%7C45602859%20rps%7C45851834%20rps%7C46712193%20rps%7C93339911%20rps%7C272089198%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25">
 
 ### report other:
 
-<img alt="Chart for other" width="466" src="https://chart.googleapis.com/chart?cht=bhs&chs=700x209&chd=t%3A1872006%2C1713701%2C1495759%2C1409199%2C1303594%2C1073870%2C431986%2C324410%2C284012%2C281197%2C200514&chco=4d89f9&chbh=12&chds=0,1872006.72809915&chxt=x,y,r&chxl=1%3A%7Cgawk%7Cperl%7Cpython3%7Cawk%7Cpython%7CHaskell%7Cruby%7Cphp%7Clua%7CPyPy%7CErlang%7C2%3A%7C200514%20rps%7C281197%20rps%7C284012%20rps%7C324410%20rps%7C431986%20rps%7C1073870%20rps%7C1303594%20rps%7C1409199%20rps%7C1495759%20rps%7C1713701%20rps%7C1872006%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25">
+<img alt="Chart for other" width="466" src="https://chart.googleapis.com/chart?cht=bhs&chs=700x192&chd=t%3A3333282%2C3235669%2C1884680%2C1669233%2C1329469%2C1264967%2C1094896%2C611578%2C458388%2C417936&chco=4d89f9&chbh=12&chds=0,3333282.06428063&chxt=x,y,r&chxl=1%3A%7Cawk%7Cperl%7Cgawk%7Cpython3%7Cruby%7CHaskell%7Clua%7Cphp%7CPyPy%7CErlang%7C2%3A%7C417936%20rps%7C458388%20rps%7C611578%20rps%7C1094896%20rps%7C1264967%20rps%7C1329469%20rps%7C1669233%20rps%7C1884680%20rps%7C3235669%20rps%7C3333282%20rps%7C0%3A%7C0%20%25%7C10%20%25%7C20%20%25%7C30%20%25%7C40%20%25%7C50%20%25%7C60%20%25%7C70%20%25%7C80%20%25%7C90%20%25%7C100%20%25">
 
 
 
