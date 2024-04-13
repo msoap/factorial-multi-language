@@ -199,34 +199,21 @@ sub create_report {
 
     print "Report $name:\n";
     push @result_report_md, "### report $name:\n";
+    push @result_report_md, "'''";
+
     for my $lang (sort {$stat->{$b} <=> $stat->{$a}} keys %$stat) {
         my $rps = $stat->{$lang};
-        my $gistogr_line = '■' x (70 * $rps / $max_rps);
-        printf "%15s - %9i rps: %s\n", $lang, $rps, $gistogr_line;
+        my $gistogr_line = '■' x (100 * $rps / $max_rps);
+        my $lang_show = $lang;
+        if ($lang eq 'JavascriptCore') {
+            $lang_show = 'JSCore';
+        }
+        my $chart_line = sprintf "%10s - %9i rps: %s", $lang_show, $rps, $gistogr_line;
+        push @result_report_md, $chart_line;
+        printf $chart_line . "\n";
     }
+    push @result_report_md, "'''\n\n";
     printf "\n";
-
-    # google image chart
-    my $chd = "t:" . join ",", map {int($stat->{$_})} sort {$stat->{$b} <=> $stat->{$a}} keys %$stat;
-    $chd = uri_escape($chd);
-    my $chxl = "1:|" . join "|", sort {$stat->{$a} <=> $stat->{$b}} keys %$stat;
-    $chxl .= "|2:|" . join "|", map {int($stat->{$_}) . ' rps'} sort {$stat->{$a} <=> $stat->{$b}} keys %$stat;
-    $chxl .= "|0:|" . join "|", map {$_ * 10 . " %"} 0 .. 10;
-    $chxl = uri_escape($chxl);
-    my $height_one = 12;
-    my $height = scalar(1 + keys %$stat) * ($height_one + 5) + 5;
-    my $width = 700;
-
-    # maximum pixels in for "chs" param
-    if ($width * $height > $MAX_GOOGLE_CHART_API_SQUARE) {
-        $width = int($MAX_GOOGLE_CHART_API_SQUARE / $height);
-    }
-
-    my $url = "https://chart.googleapis.com/chart?cht=bhs&chs=${width}x$height&chd=$chd&chco=4d89f9&chbh=$height_one&chds=0,$max_rps&chxt=x,y,r&chxl=$chxl";
-    my $width_2 = int($width / 1.5);
-    push @result_report_md, qq/<img alt="Chart for $name" width="$width_2" src="$url">\n\n/;
-    # system("open", $url) if $^O eq 'darwin';
-    system("curl -s '$url' > chart_$name.png");
 
     return join("\n", @result_report_md);
 }
