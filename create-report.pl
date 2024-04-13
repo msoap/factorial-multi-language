@@ -199,7 +199,6 @@ sub create_report {
 
     print "Report $name:\n";
     push @result_report_md, "### report $name:\n";
-    push @result_report_md, "'''";
 
     for my $lang (sort {$stat->{$b} <=> $stat->{$a}} keys %$stat) {
         my $rps = $stat->{$lang};
@@ -209,11 +208,11 @@ sub create_report {
             $lang_show = 'JSCore';
         }
         my $chart_line = sprintf "%10s - %9i rps: %s", $lang_show, $rps, $gistogr_line;
-        push @result_report_md, $chart_line;
+        push @result_report_md, "   ".$chart_line;
         printf $chart_line . "\n";
     }
-    push @result_report_md, "'''\n\n";
     printf "\n";
+    push @result_report_md, "\n";
 
     return join("\n", @result_report_md);
 }
