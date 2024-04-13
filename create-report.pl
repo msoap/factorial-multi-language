@@ -202,7 +202,7 @@ sub create_report {
 
     for my $lang (sort {$stat->{$b} <=> $stat->{$a}} keys %$stat) {
         my $rps = $stat->{$lang};
-        my $gistogr_line = '■' x (64 * $rps / $max_rps);
+        my $gistogr_line = '■' x (60 * $rps / $max_rps);
         my $lang_show = $lang;
         if ($lang eq 'JavascriptCore') {
             $lang_show = 'JSCore';
