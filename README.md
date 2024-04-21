@@ -11,8 +11,8 @@ Report:
 ### versions:
 
   * C: Apple clang version 15.0.0 (clang-1500.3.9.4)
-  * Dart: 3.3.3
-  * Erlang: 14.2.2
+  * Dart: 3.3.4
+  * Erlang: 14.2.4
   * Go: 1.22.2
   * Haskell: 9.8.2
   * Java: 18.0.2.1
@@ -25,8 +25,8 @@ Report:
   * awk: 20200816
   * gawk: 5.3.0
   * lua: 5.4.6
-  * luajit: 2.1.1710088188
-  * nim: 2.0.2
+  * luajit: 2.1.1713517273
+  * nim: 2.0.4
   * node.js: 21.7.3
   * perl: 5.34.1
   * perl6:  v2024.03.
@@ -40,8 +40,8 @@ Report:
     C: 2.216 sec for 100000000 = 45123709 rps
     C gcc -O1: 3.278 sec for 500000000 = 152514868 rps
     C gcc -O2: 0.001 sec for 9000000000 = 6745615350022 rps
-    Dart: 6.178 sec for 200000000 = 32374484 rps
-    Erlang: 1.714 sec for 7000000 = 4083900 rps
+    Dart: 6.139 sec for 200000000 = 32578586 rps
+    Erlang: 1.780 sec for 7000000 = 3932983 rps
     Go: 2.477 sec for 150000000 = 60556084 rps
     Go-cgo: 2.408 sec for 50000000 = 20764278 rps
     Go-mt: 2.758 sec for 1000000000 = 362603774 rps
@@ -56,8 +56,8 @@ Report:
     awk: 2.393 sec for 1000000 = 417936 rps
     gawk: 1.237 sec for 1000000 = 808427 rps
     lua: 1.248 sec for 3000000 = 2403450 rps
-    luajit: 1.500 sec for 50000000 = 33331885 rps
-    nim: 1.207 sec for 30000000 = 24860823 rps
+    luajit: 1.493 sec for 50000000 = 33478642 rps
+    nim: 1.211 sec for 30000000 = 24771217 rps
     node.js: 5.517 sec for 50000000 = 9062395 rps
     perl: 1.669 sec for 1000000 = 599218 rps
     perl6: 1.055 sec for 300000 = 284288 rps
@@ -76,15 +76,15 @@ Report:
         OCaml -  47593973 rps: ■■■■■■■
             C -  45123708 rps: ■■■■■■■
        Pascal -  34123097 rps: ■■■■■
-       luajit -  33331884 rps: ■■■■■
-         Dart -  32374483 rps: ■■■■■
+       luajit -  33478641 rps: ■■■■■
+         Dart -  32578586 rps: ■■■■■
          Rust -  31634292 rps: ■■■■■
-          nim -  24860822 rps: ■■■■
+          nim -  24771217 rps: ■■■■
        Go-cgo -  20764278 rps: ■■■
        JSCore -  15465757 rps: ■■
       node.js -   9062394 rps: ■
          PyPy -   4296450 rps: 
-       Erlang -   4083900 rps: 
+       Erlang -   3932983 rps: 
           php -   2570004 rps: 
           lua -   2403450 rps: 
       Haskell -   1766313 rps: 
@@ -104,10 +104,10 @@ Report:
         OCaml -  47593973 rps: ■■■■■■■
             C -  45123708 rps: ■■■■■■■
        Pascal -  34123097 rps: ■■■■■
-       luajit -  33331884 rps: ■■■■■
-         Dart -  32374483 rps: ■■■■■
+       luajit -  33478641 rps: ■■■■■
+         Dart -  32578586 rps: ■■■■■
          Rust -  31634292 rps: ■■■■■
-          nim -  24860822 rps: ■■■■
+          nim -  24771217 rps: ■■■■
        Go-cgo -  20764278 rps: ■■■
        JSCore -  15465757 rps: ■■
       node.js -   9062394 rps: ■
@@ -115,7 +115,7 @@ Report:
 ### report other:
 
          PyPy -   4296450 rps: ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-       Erlang -   4083900 rps: ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+       Erlang -   3932983 rps: ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
           php -   2570004 rps: ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
           lua -   2403450 rps: ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
       Haskell -   1766313 rps: ■■■■■■■■■■■■■■■■■■■■■■■■
