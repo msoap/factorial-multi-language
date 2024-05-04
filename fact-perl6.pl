@@ -1,7 +1,6 @@
 #!/usr/bin/env perl6
 
-# @@@ get_version: perl6 -v | perl6 -ne 's/Welcome\sto\sRakudo\S+//; $_.say; last'
-# @@@ skip_chart: 1
+# @@@ get_version: perl6 -v | awk '/Welcome to Rakudo/ {print $4}' | sed 's/^.//' | sed 's/.$//'
 
 my Int $times = 300_000;
 my Int $fact_16 = 20_922_789_888_000;

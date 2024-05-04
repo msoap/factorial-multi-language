@@ -1,6 +1,6 @@
 /*
     @@@ common_lang: C
-    @@@ get_version: gcc --version 2>/dev/null| grep -E 'gcc|version'
+    @@@ get_version: gcc --version | awk '/Apple clang version/ {print $4}'
     @@@ before: gcc -O1 -o fact_c fact-O1.c
     @@@ instead: ./fact_c
     @@@ after: rm fact_c

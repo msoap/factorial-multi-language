@@ -1,12 +1,11 @@
 /*
     @@@ common_lang: C
-    @@@ get_version: gcc --version 2>/dev/null| grep -E 'gcc|version'
+    @@@ get_version: gcc --version | awk '/Apple clang version/ {print $4}'
     @@@ before: gcc -O2 -o fact_c fact-O2.c
     @@@ instead: ./fact_c
     @@@ after: rm fact_c
     @@@ name_suffix: gcc -O2
     @@@ is_fast: 1
-    @@@ skip_chart: 1
 */
 #include <stdio.h>
 

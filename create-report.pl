@@ -42,7 +42,6 @@ Parse meta info from source files
     @@@ after: <shell command exec after measurement>
     @@@ name_suffix: <suffix for script name>
     @@@ is_fast: <this script is fast (for first chart)>
-    @@@ skip_chart: <this script is more fast or slow>
 
 =cut
 
@@ -157,6 +156,31 @@ sub calc {
 }
 
 # ------------------------------------------------------------------------------
+sub get_report_table {
+    my $VAR1 = load_cache();
+    my @result_report_md;
+    push @result_report_md, "\n### statistic with versions:\n";
+    push @result_report_md, "| Language   | Version        | Time, sec | Iterations | RPS       |";
+    push @result_report_md, "|------------|----------------|-----------|------------|-----------|";
+
+    my @languages = sort {$VAR1->{$b}->{times_per_seconds} <=> $VAR1->{$a}->{times_per_seconds}}
+                    grep {$VAR1->{$_}->{elapsed} > 0.01}
+                    keys %$VAR1;
+
+    for my $lang (@languages) {
+        push @result_report_md, sprintf("| %10s | %14s | %9.2f | %10d | %9.0f |",
+                                            $VAR1->{$lang}->{lang} eq 'JavascriptCore' ? 'JSCore' : $VAR1->{$lang}->{lang},
+                                            $VAR1->{$lang}->{version},
+                                            $VAR1->{$lang}->{elapsed},
+                                            $VAR1->{$lang}->{times},
+                                            $VAR1->{$lang}->{times_per_seconds}
+                                        );
+    }
+
+    return join("\n", @result_report_md) . "\n";
+}
+
+# ------------------------------------------------------------------------------
 sub create_report {
     my ($name, %OPT) = @_;
 
@@ -169,36 +193,16 @@ sub create_report {
 
     # grep by speed
     my $stat = {map {$VAR1->{$_}->{lang} => $VAR1->{$_}->{times_per_seconds}}
-                grep {$OPT{grep}->($_) && ! $VAR1->{$_}->{skip_chart}}
+                grep {$OPT{grep}->($_) && $VAR1->{$_}->{elapsed} > 0.01}
                 keys %$VAR1
                };
 
-    my $max_rps = max(values %$stat);
-    my $min_rps = min(values %$stat);
     my @result_report_md;
-
-    if ($OPT{add_versions}) {
-        push @result_report_md, "### versions:\n";
-        my %exists_lang;
-        for my $exe (sort {$VAR1->{$a}->{lang} cmp $VAR1->{$b}->{lang}} keys %$VAR1) {
-            my $lang = $VAR1->{$exe}->{common_lang} // $VAR1->{$exe}->{lang};
-            next if $exists_lang{$lang};
-            push @result_report_md, "  * $VAR1->{$exe}->{lang}: $VAR1->{$exe}->{version}";
-            $exists_lang{$lang}++;
-        }
-        push @result_report_md, "\n";
-    }
-
-    if ($OPT{add_raw}) {
-        push @result_report_md, "### raw data:\n";
-        for my $exe (sort {$VAR1->{$a}->{lang} cmp $VAR1->{$b}->{lang}} keys %$VAR1) {
-            push @result_report_md, "    $VAR1->{$exe}->{lang}: $VAR1->{$exe}->{log_line}";
-        }
-        push @result_report_md, "\n";
-    }
 
     print "Report $name:\n";
     push @result_report_md, "### report $name:\n";
+
+    my $max_rps = max(values %$stat);
 
     for my $lang (sort {$stat->{$b} <=> $stat->{$a}} keys %$stat) {
         my $rps = $stat->{$lang};
@@ -207,7 +211,7 @@ sub create_report {
         if ($lang eq 'JavascriptCore') {
             $lang_show = 'JSCore';
         }
-        my $chart_line = sprintf "%10s - %9i rps: %s", $lang_show, $rps, $gistogr_line;
+        my $chart_line = sprintf "%10s - %9.0f rps: %s", $lang_show, $rps, $gistogr_line;
         push @result_report_md, "   ".$chart_line;
         printf $chart_line . "\n";
     }
@@ -224,9 +228,11 @@ sub main {
 
     if (! @ARGV || $ARGV[0] eq '--create') {
         my $result_report_md = '';
-        $result_report_md .= create_report('all',   grep => sub () {1}, add_versions => 1, add_raw => 1);
-        $result_report_md .= create_report('fast',  grep => sub () {$is_fast{$_[0]} ? 1 : 0});
-        $result_report_md .= create_report('other', grep => sub () {$is_fast{$_[0]} ? 0 : 1});
+        $result_report_md .= get_report_table(); # statistic with versions in table
+        $result_report_md .= "\n## Chart\n\n";
+        $result_report_md .= create_report('for all',   grep => sub () {1});
+        $result_report_md .= create_report('for fast languages',  grep => sub () {$is_fast{$_[0]} ? 1 : 0});
+        $result_report_md .= create_report('for slow languages', grep => sub () {$is_fast{$_[0]} ? 0 : 1});
 
         my $report_vars = {
             hardware => `cat hardware.txt`
