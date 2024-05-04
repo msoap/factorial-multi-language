@@ -1,5 +1,5 @@
 /*
-    @@@ get_version: docker run --rm zenika/kotlin kotlinc -version 2>&1 | awk '{print $3}'
+    @@@ get_version: docker run --rm zenika/kotlin kotlinc -version 2>&1 | awk '$2 == "kotlinc-jvm" {print $3}'
     @@@ before: docker run --rm -v "$PWD":/app -w /app zenika/kotlin kotlinc fact.kt
     @@@ instead: docker run --rm -v "$PWD":/app -w /app zenika/kotlin kotlin FactKt
     @@@ after: rm -rf FactKt.class ./META-INF

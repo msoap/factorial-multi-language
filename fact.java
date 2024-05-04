@@ -1,7 +1,7 @@
 /*
-    @@@ get_version: docker run --rm -v "$PWD":/app -w /app openjdk:18-slim java -version 2>&1 | awk '$2 == "version" {print $3}' | sed 's/"//g'
-    @@@ before: docker run --rm -v "$PWD":/app -w /app openjdk:18-slim javac fact.java
-    @@@ instead: docker run --rm -v "$PWD":/app -w /app openjdk:18-slim java fact
+    @@@ get_version: docker run --rm -v "$PWD":/app -w /app amazoncorretto:22-alpine-jdk java -version 2>&1 | awk '$2 == "version" {print $3}' | sed 's/"//g'
+    @@@ before: docker run --rm -v "$PWD":/app -w /app amazoncorretto:22-alpine-jdk javac fact.java
+    @@@ instead: docker run --rm -v "$PWD":/app -w /app amazoncorretto:22-alpine-jdk java fact
     @@@ after: rm fact.class
     @@@ is_fast: 1
 */
