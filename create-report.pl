@@ -38,6 +38,7 @@ Parse meta info from source files
     @@@ version: language version
     @@@ get_version: <shell command for get version>
     @@@ before: <shell command for exec before measurement, for example compilation>
+    @@@ env: <environment variables for exec, like N=16>
     @@@ instead: <shell command exec instead a script>
     @@@ after: <shell command exec after measurement>
     @@@ name_suffix: <suffix for script name>
@@ -99,7 +100,16 @@ sub calc {
 
         print "$exe ";
 
-        my ($output, $elapsed, $name, $times) = ('', 0, undef, undef);
+        my ($output, $elapsed, $name, $times, $new_env) = ('', 0, undef, undef, {});
+
+        if (exists $exe_info->{env}) {
+            my @env = split /\s+/, $exe_info->{env};
+            for my $env_var (@env) {
+                my ($key, $value) = split /=/, $env_var, 2;
+                $ENV{$key} = $value;
+                $new_env->{$key} = $value;
+            }
+        }
 
         for (1 .. $COUNT_EXEC_EACH_LANG) {
             my $t0 = [gettimeofday()];
@@ -116,6 +126,11 @@ sub calc {
                 next LANG;
             }
             print ".";
+        }
+        if (scalar(%$new_env)) {
+            for my $key (keys %$new_env) {
+                delete $ENV{$key};
+            }
         }
         print " ";
 
@@ -160,15 +175,15 @@ sub get_report_table {
     my $VAR1 = load_cache();
     my @result_report_md;
     push @result_report_md, "\n### statistic with versions:\n";
-    push @result_report_md, "| Language   | Version        | Time, sec | Iterations | RPS       |";
-    push @result_report_md, "|------------|----------------|-----------|------------|-----------|";
+    push @result_report_md, "| Language    | Version        | Time, sec | Iterations | RPS       |";
+    push @result_report_md, "|-------------|----------------|-----------|------------|-----------|";
 
     my @languages = sort {$VAR1->{$b}->{times_per_seconds} <=> $VAR1->{$a}->{times_per_seconds}}
                     grep {$VAR1->{$_}->{elapsed} > 0.01}
                     keys %$VAR1;
 
     for my $lang (@languages) {
-        push @result_report_md, sprintf("| %10s | %14s | %9.2f | %10d | %9.0f |",
+        push @result_report_md, sprintf("| %11s | %14s | %9.2f | %10d | %9.0f |",
                                             $VAR1->{$lang}->{lang} eq 'JavascriptCore' ? 'JSCore' : $VAR1->{$lang}->{lang},
                                             $VAR1->{$lang}->{version},
                                             $VAR1->{$lang}->{elapsed},
@@ -211,7 +226,7 @@ sub create_report {
         if ($lang eq 'JavascriptCore') {
             $lang_show = 'JSCore';
         }
-        my $chart_line = sprintf "%10s - %9.0f rps: %s", $lang_show, $rps, $gistogr_line;
+        my $chart_line = sprintf "%11s - %9.0f rps: %s", $lang_show, $rps, $gistogr_line;
         push @result_report_md, "   ".$chart_line;
         printf $chart_line . "\n";
     }
