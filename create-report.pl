@@ -226,7 +226,7 @@ sub create_report {
         if ($lang eq 'JavascriptCore') {
             $lang_show = 'JSCore';
         }
-        my $chart_line = sprintf "%11s - %9.0f rps: %s", $lang_show, $rps, $gistogr_line;
+        my $chart_line = sprintf "%12s - %9.0f rps: %s", $lang_show, $rps, $gistogr_line;
         push @result_report_md, "   ".$chart_line;
         printf $chart_line . "\n";
     }
