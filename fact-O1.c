@@ -26,7 +26,7 @@ int main() {
     int ok = 1;
     long int i;
     for(i = 0; i < times; ++i) {
-        ok = ok && fact(16) == fact_16;
+        ok = ok && fact(n) == fact_16;
     }
     printf("C finish %li - %s\n", times, ok ? "ok" : "fail");
 }
