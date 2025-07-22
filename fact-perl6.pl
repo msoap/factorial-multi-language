@@ -1,8 +1,8 @@
 #!/usr/bin/env perl6
 
-# @@@ get_version: perl6 -v | awk '/Welcome to Rakudo/ {print $4}' | sed 's/^.//' | sed 's/.$//'
+# @@@ get_version: perl6 -v | awk '/Welcome to Rakudo/ {print $5}' | sed 's/^.//' | sed 's/.$//'
 
-my Int $times = 300_000;
+my Int $times = 500_000;
 my Int $fact_16 = 20_922_789_888_000;
 
 # ------------------------------------------------------------------------------
