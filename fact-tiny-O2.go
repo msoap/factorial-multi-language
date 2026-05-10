@@ -32,7 +32,7 @@ func fact(n uint64) uint64 {
 // ----------------------------------------------
 func main() {
 	ok := true
-	nstr, _ := strconv.Atoi(os.Getenv("N"))
+	nstr, _ := strconv.Atoi(os.Getenv("N")) // to prevent compiler optimization from calculating fact(16) at compile time
 	n := uint64(nstr)
 
 	for i := 0; i < times; i++ {
