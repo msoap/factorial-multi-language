@@ -565,10 +565,10 @@ function timeTicks(t0, t1, maxTicks) {
 // chart chrome
 
 function frame(host, height) {
-  host.replaceChildren();
+  // measure before clearing: a forced layout with an empty host shrinks the page and clamps scroll
   const width = Math.max(280, Math.floor(host.clientWidth));
   const svg = s('svg', {width, height, viewBox: `0 0 ${width} ${height}`});
-  host.appendChild(svg);
+  host.replaceChildren(svg);
   return {svg, width};
 }
 
@@ -1153,6 +1153,9 @@ function renderRanking() {
   const rowH = 22;
   const m = {l: 150, r: 84, t: 8, b: 26};
   const H = m.t + rows.length * rowH + m.b;
+  // reserve height of the largest snapshot, so playback and slider don't resize the page
+  const maxRows = Math.max(...records.map((r) => Object.keys(r.langs).length));
+  host.style.minHeight = (m.t + maxRows * rowH + m.b) + 'px';
   const {svg, width} = frame(host, H);
   const pw = Math.max(40, width - m.l - m.r);
   const [dmin, dmax] = rankingDomain(records);
