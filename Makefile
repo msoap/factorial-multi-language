@@ -10,3 +10,6 @@ create-report:
 
 calc_without_cache:
 	env CACHE_NO=1 ./create-report.pl --calc
+
+collect-history:
+	./create-report.pl --collect-history

@@ -11,6 +11,9 @@ Calculate stat without cache:
 Create report:
 	./create-report.pl --create
 
+Collect statistics from git history of README.md into history.jsonl:
+	./create-report.pl --collect-history
+
 =cut
 
 use v5.10;
@@ -21,9 +24,11 @@ use Time::HiRes qw/gettimeofday tv_interval/;
 use List::Util qw/max min/;
 use URI::Escape;
 use Data::Dumper;
+use JSON::PP;
 
 our $report_data = 'report.dat';
 our $report_markdown = 'README.md';
+our $history_jsonl = 'history.jsonl';
 our $COUNT_EXEC_EACH_LANG = 10;
 our $MAX_GOOGLE_CHART_API_SQUARE = 300_000; # maximum square of google chart
 
@@ -237,8 +242,166 @@ sub create_report {
 }
 
 # ------------------------------------------------------------------------------
+
+=head2 parse_readme_hardware
+
+Hardware info is the first "Header:\n-----" section of README.md
+
+=cut
+
+sub parse_readme_hardware {
+    my $readme = shift;
+
+    my ($block) = $readme =~ /^[^\n]+:[ \t]*\n-{3,}[ \t]*\n(.*?)(?=^\#|^[^\n]+\n-{3,}[ \t]*$|\z)/ms;
+    return '' unless defined $block;
+
+    return join '; ', grep {length} map {s/^\s+|\s+$//gr =~ s/\s+/ /gr} split /\n/, $block;
+}
+
+# ------------------------------------------------------------------------------
+sub normalize_lang_name {
+    my $name = shift;
+    return $name eq 'JavascriptCore' ? 'JSCore' : $name;
+}
+
+# ------------------------------------------------------------------------------
+
+=head2 parse_readme_stats
+
+Parse speed and versions for each language from README.md, supported formats:
+    * table "### statistic with versions:" (since 2024-05)
+    * bullet list "### versions:" + "### raw data:" lines with rps
+    * only ascii chart "name - NNN rps: ***" (early 2012, without versions)
+
+=cut
+
+sub parse_readme_stats {
+    my $readme = shift;
+    my %languages;
+
+    if ($readme =~ /^\#\#\# statistic with versions:/m) {
+        for my $line (split /\n/, $readme) {
+            next unless $line =~ /^\|(.+)\|\s*$/;
+            my @cols = map {s/^\s+|\s+$//gr} split /\|/, $1;
+            next unless @cols == 5 && $cols[4] =~ /^\d+(?:\.\d+)?$/;
+            $languages{normalize_lang_name($cols[0])} = {version => $cols[1], rps => int($cols[4] + 0.5)};
+        }
+        return \%languages;
+    }
+
+    my %versions;
+    if (my ($block) = $readme =~ /^\#\#\# versions:[ \t]*\n(.*?)(?=^\#|\z)/ms) {
+        %versions = $block =~ /^\s+\*\s+([^:\n]+?):[ \t]*(.*?)[ \t]*$/mg;
+        s/^\s+|\s+$//g for values %versions;
+    }
+
+    my %rps;
+    if (my ($block) = $readme =~ /^\#\#\# raw data:[ \t]*\n(.*?)(?=^\#|\z)/ms) {
+        while ($block =~ /^\s+(\S.*?):\s+([\d.]+)\s+sec\s+for\s+\d+\s+=\s+([\d.]+)\s+rps/mg) {
+            # same filter as in report: too fast results are broken (optimized away by compiler)
+            $rps{$1} = $3 if $2 > 0.01;
+        }
+    } else {
+        while ($readme =~ /^\s+(\S.*?)\s+-\s+(\d+)\s+rps:/mg) {
+            $rps{$1} //= $2;
+        }
+    }
+
+    # versions keys are base languages: "C" for "C gcc -O1", "Go" for "Go-mt"
+    my @version_keys = sort {length($b) <=> length($a)} keys %versions;
+    for my $name (keys %rps) {
+        my $version = $versions{$name};
+        unless (defined $version) {
+            my ($key) = grep {$name =~ /^\Q$_\E[\s-]/} @version_keys;
+            $version = defined $key ? $versions{$key} : '';
+        }
+        $languages{normalize_lang_name($name)} = {version => $version, rps => int($rps{$name} + 0.5)};
+    }
+
+    return \%languages;
+}
+
+# ------------------------------------------------------------------------------
+sub speed_signature {
+    my $languages = shift;
+    return join ',', map {"$_=$languages->{$_}->{rps}"} sort keys %$languages;
+}
+
+# ------------------------------------------------------------------------------
+
+=head2 collect_history
+
+Walk over git history of README.md and append statistics from each commit to history.jsonl.
+Commits already present in history.jsonl are not parsed again,
+commits without changes in speed are skipped.
+
+=cut
+
+sub collect_history {
+    my $json = JSON::PP->new->utf8->canonical;
+
+    my %saved;
+    if (open my $FH, '<:raw', $history_jsonl) {
+        while (my $line = <$FH>) {
+            next unless $line =~ /\S/;
+            my $record = eval {$json->decode($line)};
+            die "$history_jsonl:$.: invalid JSON: $@" unless $record;
+            $saved{$record->{commit}} = $record;
+        }
+        close $FH;
+    }
+
+    open my $GIT, '-|', 'git', 'log', '--reverse', '--format=%H %cd', '--date=format:%Y-%m-%d %H:%M:%S', '--', $report_markdown
+        or die "Error run git: $!\n";
+    my @commits = map {chomp; [split / /, $_, 2]} <$GIT>;
+    close $GIT or die "Error run git log\n";
+
+    open my $OUT, '>>:raw', $history_jsonl or die "Error open file: $!\n";
+    my ($prev_signature, $added, $skipped) = ('', 0, 0);
+
+    for my $commit (@commits) {
+        my ($hash, $date) = @$commit;
+
+        if (exists $saved{$hash}) {
+            $prev_signature = speed_signature($saved{$hash}->{languages});
+            next;
+        }
+
+        open my $FH, '-|:encoding(UTF-8)', 'git', 'show', "$hash:$report_markdown" or die "Error run git: $!\n";
+        my $readme = join '', <$FH>;
+        close $FH or do {warn "Error get $report_markdown from $hash\n"; next};
+
+        my $languages = parse_readme_stats($readme);
+        my $signature = speed_signature($languages);
+        if (! %$languages || $signature eq $prev_signature) {
+            $skipped++;
+            next;
+        }
+        $prev_signature = $signature;
+
+        print $OUT $json->encode({
+            commit => $hash,
+            date => $date,
+            hardware => parse_readme_hardware($readme),
+            languages => $languages,
+        }) . "\n";
+        $added++;
+    }
+
+    close $OUT;
+    printf "%s: added %d, already present %d, skipped without speed changes %d\n",
+        $history_jsonl, $added, scalar(keys %saved), $skipped;
+}
+
+# ------------------------------------------------------------------------------
 sub main {
-    die "$0 [ --help | --calc | --create ]\n" if $ARGV[0] && $ARGV[0] eq '--help';
+    die "$0 [ --help | --calc | --create | --collect-history ]\n" if $ARGV[0] && $ARGV[0] eq '--help';
+
+    if (@ARGV && $ARGV[0] eq '--collect-history') {
+        collect_history();
+        return;
+    }
+
     calc() if ! @ARGV || $ARGV[0] eq '--calc';
 
     if (! @ARGV || $ARGV[0] eq '--create') {
