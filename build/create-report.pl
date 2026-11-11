@@ -426,11 +426,13 @@ sub collect_history {
 
 Create static dashboard docs/index.html from history.jsonl:
 data is embedded into history-report.tmpl.html, without external dependencies.
+Records marked as "valid": false (e.g. measured in power save mode) are skipped.
 
 =cut
 
 sub create_history_report {
-    my @records = sort {$a->{date} cmp $b->{date}} @{load_history()};
+    my @records = sort {$a->{date} cmp $b->{date}}
+        grep {! exists $_->{valid} || $_->{valid}} @{load_history()};
     die "$history_jsonl is empty, run: $0 --collect-history\n" unless @records;
 
     my (%hardware_idx, @hardware, @data);
@@ -457,7 +459,13 @@ sub create_history_report {
     $repo_url =~ s{\.git$}{};
     $repo_url = '' unless $repo_url =~ m{^https://};
 
-    my $json = JSON::PP->new->canonical->encode({repo => $repo_url, hardware => \@hardware, records => \@data});
+    # one record per line, for readable git diffs of the generated report
+    my $encoder = JSON::PP->new->canonical->allow_nonref;
+    my $json = "{\n" . join(",\n",
+        '"hardware":' . $encoder->encode(\@hardware),
+        qq{"records":[\n} . join(",\n", map {$encoder->encode($_)} @data) . "\n]",
+        '"repo":' . $encoder->encode($repo_url),
+    ) . "\n}";
     $json =~ s{</}{<\\/}g; # safe for embedding into <script>
 
     open my $TMPL, '<:encoding(UTF-8)', $history_report_template or die "Error open file $history_report_template: $!\n";
