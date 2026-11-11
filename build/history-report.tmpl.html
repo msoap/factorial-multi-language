@@ -1,0 +1,1341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factorial Benchmark History</title>
+<meta name="description" content="How the speed of factorial calculation changed across languages, versions and hardware over the history of the factorial-multi-language benchmark.">
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.10);
+  --band: rgba(11, 11, 11, 0.035);
+  --hover: rgba(11, 11, 11, 0.05);
+  --accent: #2a78d6;
+  --shadow: 0 4px 16px rgba(11, 11, 11, 0.10);
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+  --s5: #e87ba4; --s6: #008300; --s7: #6250d6; --s8: #e34948;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --ink: #f0efec;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255, 255, 255, 0.10);
+    --band: rgba(255, 255, 255, 0.035);
+    --hover: rgba(255, 255, 255, 0.06);
+    --accent: #3987e5;
+    --shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+    --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface: #1a1a19;
+  --ink: #f0efec;
+  --ink-2: #c3c2b7;
+  --muted: #898781;
+  --grid: #2c2c2a;
+  --axis: #383835;
+  --border: rgba(255, 255, 255, 0.10);
+  --band: rgba(255, 255, 255, 0.035);
+  --hover: rgba(255, 255, 255, 0.06);
+  --accent: #3987e5;
+  --shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+  --s5: #d55181; --s6: #008300; --s7: #9085e9; --s8: #e66767;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--page);
+  color: var(--ink);
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); }
+button, select, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.wrap { max-width: 1180px; margin: 0 auto; padding: 28px 16px 48px; }
+header.top { display: flex; gap: 16px; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+h1 { font-size: 24px; line-height: 1.2; margin: 0 0 6px; font-weight: 650; }
+h2 { font-size: 16px; margin: 0; font-weight: 600; }
+.sub { color: var(--ink-2); margin: 0; max-width: 760px; }
+.muted { color: var(--muted); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  min-width: 0;
+}
+.card-head { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; min-width: 0; }
+.kpi .label { color: var(--ink-2); font-size: 12px; }
+.kpi .value { font-size: 24px; font-weight: 600; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi .note { color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; margin-bottom: 12px; }
+.field { display: flex; gap: 8px; align-items: center; min-width: 0; }
+.field > span { color: var(--ink-2); font-size: 13px; white-space: nowrap; }
+select, input[type="search"] {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 5px 8px;
+  max-width: 100%;
+  min-width: 0;
+}
+select { max-width: 260px; }
+.seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.seg button { background: transparent; border: 0; padding: 5px 12px; cursor: pointer; color: var(--ink-2); }
+.seg button + button { border-left: 1px solid var(--border); }
+.seg button[aria-pressed="true"] { background: var(--hover); color: var(--ink); font-weight: 600; }
+
+.picker-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+.picker-tools input { width: 180px; }
+.btn {
+  background: transparent; border: 1px solid var(--border); border-radius: 999px;
+  padding: 3px 10px; cursor: pointer; color: var(--ink-2); font-size: 13px;
+}
+.btn:hover { background: var(--hover); color: var(--ink); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  display: inline-flex; gap: 6px; align-items: center;
+  background: transparent; border: 1px solid var(--border); border-radius: 999px;
+  padding: 3px 10px; cursor: pointer; font-size: 13px; color: var(--ink-2);
+}
+.chip:hover { background: var(--hover); color: var(--ink); }
+.chip[aria-pressed="true"] { color: var(--ink); background: var(--hover); border-color: var(--axis); font-weight: 600; }
+.chip[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+.chip .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.chip .tag { color: var(--muted); font-size: 11px; font-weight: 400; }
+.picker-note { color: var(--muted); font-size: 12px; margin-top: 8px; }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--border); margin: -4px 0 14px; }
+.tabs button {
+  background: transparent; border: 0; border-bottom: 2px solid transparent;
+  padding: 8px 12px; margin-bottom: -1px; cursor: pointer; color: var(--ink-2); font-size: 14px;
+}
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 8px; font-size: 13px; color: var(--ink-2); }
+.legend .item { display: inline-flex; gap: 6px; align-items: center; }
+.legend .line-key { width: 16px; height: 2px; border-radius: 1px; }
+.legend .dot-key { width: 9px; height: 9px; border-radius: 50%; }
+
+.chart { position: relative; width: 100%; min-width: 0; }
+.chart svg { display: block; overflow: visible; }
+.chart text { font-family: inherit; }
+.panel { margin-bottom: 8px; }
+.panel-title { display: flex; gap: 8px; align-items: baseline; font-size: 13px; margin: 6px 0 0; }
+.panel-title .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; align-self: center; }
+.empty { color: var(--muted); padding: 40px 0; text-align: center; }
+.hint { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+
+.tip {
+  position: absolute; z-index: 10; pointer-events: none;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  box-shadow: var(--shadow); padding: 8px 10px; font-size: 12px; min-width: 180px; max-width: 300px;
+}
+.tip .head { color: var(--ink-2); margin-bottom: 6px; }
+.tip .head b { color: var(--ink); font-weight: 600; }
+.tip .row { display: grid; grid-template-columns: 14px auto 1fr; gap: 6px; align-items: baseline; white-space: nowrap; }
+.tip .row .k { width: 12px; height: 2px; border-radius: 1px; align-self: center; }
+.tip .row .v { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink); text-align: right; }
+.tip .row .n { color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; }
+.tip .row .n i { color: var(--muted); font-style: normal; }
+.tip .kv { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; }
+.tip .kv dt { color: var(--muted); }
+.tip .kv dd { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; overflow: hidden; text-overflow: ellipsis; }
+.tip .foot { color: var(--muted); margin-top: 6px; }
+
+.table-wrap { overflow-x: auto; margin-top: 4px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 6px 10px; border-bottom: 1px solid var(--grid); text-align: left; white-space: nowrap; }
+th { color: var(--ink-2); font-weight: 600; font-size: 12px; }
+th button { background: transparent; border: 0; padding: 0; cursor: pointer; color: inherit; font-weight: inherit; }
+th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
+td .key { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
+td.dim { color: var(--muted); }
+tbody tr:hover { background: var(--hover); }
+
+.rank-tools { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.rank-tools input[type="range"] { width: min(420px, 100%); accent-color: var(--accent); }
+.rank-meta { color: var(--ink-2); font-size: 13px; }
+
+footer { color: var(--muted); font-size: 12px; margin-top: 24px; }
+
+@media (max-width: 640px) {
+  header.top { flex-direction: column; }
+  h1 { font-size: 20px; }
+  .picker-tools input { width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Factorial benchmark history</h1>
+      <p class="sub" id="subtitle"></p>
+    </div>
+    <button class="btn" id="theme-toggle" type="button" title="Toggle light/dark theme">Theme</button>
+  </header>
+
+  <section class="kpis" id="kpis" aria-label="Summary"></section>
+
+  <section class="card" aria-label="Filters">
+    <div class="filters">
+      <label class="field"><span>Hardware</span><select id="hw-filter"></select></label>
+      <div class="field"><span>Scale</span>
+        <div class="seg" id="scale-seg">
+          <button type="button" data-scale="log">Log</button>
+          <button type="button" data-scale="linear">Linear</button>
+        </div>
+      </div>
+    </div>
+    <div class="picker-tools">
+      <input type="search" id="lang-search" placeholder="Find language…" aria-label="Find language">
+      <span class="muted" style="font-size:12px">Presets:</span>
+      <span id="presets" style="display:contents"></span>
+      <button class="btn" type="button" id="clear-langs">Clear</button>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Languages"></div>
+    <div class="picker-note" id="picker-note"></div>
+  </section>
+
+  <section class="card" aria-label="Charts">
+    <div class="tabs" role="tablist" id="tabs">
+      <button type="button" role="tab" data-view="time">Over time</button>
+      <button type="button" role="tab" data-view="version">By version</button>
+      <button type="button" role="tab" data-view="hardware">By hardware</button>
+      <button type="button" role="tab" data-view="relative">Relative to baseline</button>
+    </div>
+    <div class="card-head">
+      <h2 id="view-title"></h2>
+      <div class="filters" style="margin:0" id="view-options"></div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="chart" id="chart"></div>
+    <p class="hint" id="view-hint"></p>
+    <div class="table-wrap" id="view-table"></div>
+  </section>
+
+  <section class="card" aria-label="Ranking at a snapshot">
+    <div class="card-head">
+      <h2>Ranking at a snapshot</h2>
+      <div class="rank-tools">
+        <button class="btn" type="button" id="play">▶ Play</button>
+        <input type="range" id="snap" min="0" max="0" value="0" aria-label="Snapshot">
+      </div>
+    </div>
+    <div class="rank-meta" id="rank-meta"></div>
+    <div class="chart" id="ranking"></div>
+    <p class="hint">All languages measured in this snapshot. Click a row to add or remove the language from the comparison above.</p>
+  </section>
+
+  <footer id="footer"></footer>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+const DATA = /*HISTORY_DATA*/null;
+
+const SVGNS = 'http://www.w3.org/2000/svg';
+const MAX_SELECTED = 8;
+const DEFAULT_SELECTED = ['C clang', 'Go', 'Rust', 'node.js', 'python3'];
+const PRESETS = [
+  {label: 'Top 5 now', langs: () => latestTop(5)},
+  {label: 'C · Go · Rust · Zig', langs: () => ['C clang', 'Go', 'Rust', 'Zig']},
+  {label: 'Go flavours', langs: () => ['Go', 'Go-mt', 'Go-cgo', 'Go tiny', 'Go tiny -O2']},
+  {label: 'Scripting', langs: () => ['perl', 'python3', 'ruby', 'php', 'lua', 'node.js']},
+  {label: 'JIT vs interpreter', langs: () => ['lua', 'luajit', 'python3', 'PyPy']},
+  {label: 'JS engines', langs: () => ['node.js', 'JSCore', 'CoffeeScript']},
+];
+const VIEWS = {
+  time: {
+    title: 'Speed over time',
+    hint: 'Each point is a README.md commit where results changed. Shaded bands mark the machine used — jumps at band edges are mostly hardware, not the language. Click the chart to open that snapshot in the ranking below.',
+  },
+  version: {
+    title: 'Speed by language version',
+    hint: 'Dot = median rps of all snapshots measured with that version, line = min–max. Versions are ordered by first appearance. Pick a single machine in the Hardware filter to compare versions without hardware effects.',
+  },
+  hardware: {
+    title: 'Speed by hardware',
+    hint: 'Dot = median rps of all snapshots on that machine, line = min–max. Machines are ordered by when they were used. Ignores the Hardware filter.',
+  },
+  relative: {
+    title: 'Speed relative to a baseline language',
+    hint: 'rps of each language divided by rps of the baseline in the same snapshot. This cancels out hardware changes: a rising line means the language got faster compared to the baseline.',
+  },
+};
+
+// ---------------------------------------------------------------------------
+// helpers
+
+const $ = (id) => document.getElementById(id);
+
+function h(tag, attrs, ...children) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null || v === false) continue;
+    if (k === 'class') e.className = v;
+    else if (k === 'style') Object.assign(e.style, v);
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of children.flat()) if (c != null) e.append(c);
+  return e;
+}
+
+function s(tag, attrs, parent) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null) continue;
+    if (k === 'style') Object.assign(e.style, v);
+    else if (k === 'text') e.textContent = v;
+    else e.setAttribute(k, v);
+  }
+  if (parent) parent.appendChild(e);
+  return e;
+}
+
+const nf = new Intl.NumberFormat('en-US');
+const fmtFull = (v) => nf.format(Math.round(v));
+
+function fmtShort(v) {
+  const a = Math.abs(v);
+  const [div, unit] = a >= 1e9 ? [1e9, 'G'] : a >= 1e6 ? [1e6, 'M'] : a >= 1e3 ? [1e3, 'k'] : [1, ''];
+  const x = v / div;
+  const digits = x >= 100 || div === 1 ? 0 : x >= 10 ? 1 : 2;
+  return String(+x.toFixed(digits)) + unit;
+}
+
+const fmtRatio = (v) => (v >= 100 ? v.toFixed(0) : v >= 1 ? v.toFixed(2) : v.toPrecision(2)) + '×';
+const fmtRatioTick = (v) => String(+v.toPrecision(3)) + '×';
+const fmtDate = (d) => d.toISOString().slice(0, 10);
+const yearOf = (r) => r.dateStr.slice(0, 4);
+
+function parseDate(str) {
+  const [d, t] = str.split(' ');
+  return new Date(d + 'T' + (t || '00:00:00') + 'Z');
+}
+
+function median(values) {
+  const v = [...values].sort((a, b) => a - b);
+  const m = v.length >> 1;
+  return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2;
+}
+
+function truncate(text, maxChars) {
+  if (maxChars < 2) return '';
+  return text.length > maxChars ? text.slice(0, Math.max(1, maxChars - 1)) + '…' : text;
+}
+
+function storageGet(key) {
+  try { return localStorage.getItem(key); } catch (e) { return null; }
+}
+function storageSet(key, value) {
+  try { localStorage.setItem(key, value); } catch (e) { /* ignore */ }
+}
+
+// ---------------------------------------------------------------------------
+// data
+
+if (!DATA || !DATA.records || !DATA.records.length) {
+  document.querySelector('.wrap').replaceChildren(h('p', {class: 'empty'}, 'No history data. Run: make history'));
+  return;
+}
+
+function hwLabel(full) {
+  const parts = full.split('; ');
+  if (parts.length > 1) return parts.slice(0, 3).map((p) => p.replace(/^[^:]*:\s*/, '')).join(' · ');
+  return full || 'unknown';
+}
+
+const HW = DATA.hardware.map((full, id) => ({id, full, label: hwLabel(full)}));
+
+const RECORDS = DATA.records.map((r, i) => {
+  const date = parseDate(r[0]);
+  return {i, dateStr: r[0], date, t: +date, commit: r[1], hw: r[2], langs: r[3]};
+});
+
+for (const hw of HW) {
+  const recs = RECORDS.filter((r) => r.hw === hw.id);
+  hw.first = recs[0];
+  hw.last = recs[recs.length - 1];
+  hw.count = recs.length;
+}
+
+const LANG_INFO = new Map();
+for (const r of RECORDS) {
+  for (const [name, [rps]] of Object.entries(r.langs)) {
+    let info = LANG_INFO.get(name);
+    if (!info) {
+      info = {name, first: r, n: 0};
+      LANG_INFO.set(name, info);
+    }
+    info.last = r;
+    info.lastRps = rps;
+    info.n++;
+  }
+}
+const LAST_RECORD = RECORDS[RECORDS.length - 1];
+for (const info of LANG_INFO.values()) info.active = info.last === LAST_RECORD;
+const LANGS = [...LANG_INFO.values()].sort((a, b) => (b.active - a.active) || (b.lastRps - a.lastRps));
+
+function commitUrl(commit) {
+  return DATA.repo ? DATA.repo + '/commit/' + commit : null;
+}
+
+// ---------------------------------------------------------------------------
+// state
+
+const state = {
+  selected: [],
+  slots: new Map(), // language -> palette slot, kept while selected (color follows the language)
+  view: 'time',
+  hw: 'all',
+  scale: 'log',
+  base: 'C clang',
+  gran: 'auto',
+  snap: -1,
+  search: '',
+};
+
+function select(name) {
+  if (!LANG_INFO.has(name) || state.selected.includes(name) || state.selected.length >= MAX_SELECTED) return;
+  const used = new Set(state.slots.values());
+  let slot = 0;
+  while (used.has(slot)) slot++;
+  state.slots.set(name, slot);
+  state.selected.push(name);
+}
+
+function deselect(name) {
+  state.selected = state.selected.filter((n) => n !== name);
+  state.slots.delete(name);
+}
+
+function toggle(name) {
+  if (state.selected.includes(name)) deselect(name);
+  else select(name);
+  render();
+}
+
+function setSelection(names) {
+  state.selected = [];
+  state.slots.clear();
+  names.forEach(select);
+}
+
+const color = (name) => `var(--s${state.slots.get(name) + 1})`;
+
+function filtered() {
+  return state.hw === 'all' ? RECORDS : RECORDS.filter((r) => r.hw === +state.hw);
+}
+
+function latestTop(n) {
+  const recs = filtered();
+  const last = recs[recs.length - 1];
+  return Object.entries(last.langs).sort((a, b) => b[1][0] - a[1][0]).slice(0, n).map((e) => e[0]);
+}
+
+function readHash() {
+  try {
+    const p = new URLSearchParams(location.hash.slice(1));
+    if (p.has('langs')) setSelection(p.get('langs').split(',').filter(Boolean));
+    else setSelection(DEFAULT_SELECTED);
+    if (VIEWS[p.get('view')]) state.view = p.get('view');
+    if (p.get('hw') && (p.get('hw') === 'all' || HW[+p.get('hw')])) state.hw = p.get('hw');
+    if (['log', 'linear'].includes(p.get('scale'))) state.scale = p.get('scale');
+    if (LANG_INFO.has(p.get('base'))) state.base = p.get('base');
+    if (['auto', 'major', 'minor', 'full'].includes(p.get('gran'))) state.gran = p.get('gran');
+  } catch (e) {
+    setSelection(DEFAULT_SELECTED);
+  }
+}
+
+function writeHash() {
+  try {
+    const p = new URLSearchParams();
+    p.set('langs', state.selected.join(','));
+    p.set('view', state.view);
+    p.set('hw', state.hw);
+    p.set('scale', state.scale);
+    if (state.view === 'relative') p.set('base', state.base);
+    if (state.view === 'version') p.set('gran', state.gran);
+    history.replaceState(null, '', '#' + p.toString());
+  } catch (e) { /* ignore */ }
+}
+
+// ---------------------------------------------------------------------------
+// scales
+
+function niceStep(raw) {
+  const p = 10 ** Math.floor(Math.log10(raw));
+  const f = raw / p;
+  return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
+}
+
+function makeY(values, log, bottom, top) {
+  let min = Math.min(...values);
+  let max = Math.max(...values);
+  if (log) {
+    min = Math.max(min, 1e-9);
+    let l0 = Math.log10(min), l1 = Math.log10(max);
+    const pad = Math.max(0.05, (l1 - l0) * 0.04);
+    if (l1 - l0 < 0.3) { l0 -= 0.3; l1 += 0.3; }
+    l0 -= pad; l1 += pad;
+    const scale = (v) => bottom + (Math.log10(Math.max(v, 1e-9)) - l0) / (l1 - l0) * (top - bottom);
+    const decades = l1 - l0;
+    const mults = decades >= 3 ? [1] : decades >= 1 ? [1, 2, 5] : [1, 1.5, 2, 3, 5, 7];
+    let ticks = [];
+    for (let e = Math.floor(l0); e <= Math.ceil(l1); e++) {
+      for (const m of mults) {
+        const v = Number((m * 10 ** e).toPrecision(6));
+        const lv = Math.log10(v);
+        if (lv >= l0 && lv <= l1) ticks.push(v);
+      }
+    }
+    if (ticks.length > 9) ticks = ticks.filter((_, i) => i % 2 === 0);
+    return {scale, ticks};
+  }
+  const step = niceStep((max || 1) / 5);
+  const dmax = Math.ceil((max || 1) / step) * step;
+  const scale = (v) => bottom + v / dmax * (top - bottom);
+  const ticks = [];
+  for (let v = 0; v <= dmax + step / 2; v += step) ticks.push(v);
+  return {scale, ticks};
+}
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+function timeTicks(t0, t1, maxTicks) {
+  const out = [];
+  const d0 = new Date(t0), d1 = new Date(t1);
+  const years = (t1 - t0) / (365.25 * 864e5);
+  if (years >= 2) {
+    const y0 = d0.getUTCFullYear(), y1 = d1.getUTCFullYear();
+    const step = [1, 2, 5, 10].find((st) => (y1 - y0) / st <= maxTicks) || 10;
+    for (let y = Math.ceil(y0 / step) * step; y <= y1; y += step) {
+      const t = Date.UTC(y, 0, 1);
+      if (t >= t0 && t <= t1) out.push({t, label: String(y)});
+    }
+    return out;
+  }
+  const months = (t1 - t0) / (30.4 * 864e5);
+  const step = [1, 2, 3, 6].find((st) => months / st <= maxTicks) || 12;
+  let y = d0.getUTCFullYear(), m = d0.getUTCMonth() + 1;
+  for (;;) {
+    if (m > 11) { y += Math.floor(m / 12); m %= 12; }
+    const t = Date.UTC(y, m, 1);
+    if (t > t1) break;
+    if (m % step === 0) out.push({t, label: m === 0 ? String(y) : MONTHS[m] + (out.length ? '' : ' ' + y)});
+    m++;
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// chart chrome
+
+function frame(host, height) {
+  host.replaceChildren();
+  const width = Math.max(280, Math.floor(host.clientWidth));
+  const svg = s('svg', {width, height, viewBox: `0 0 ${width} ${height}`});
+  host.appendChild(svg);
+  return {svg, width};
+}
+
+function emptyState(host, text) {
+  host.replaceChildren(h('div', {class: 'empty'}, text));
+}
+
+function drawYAxis(svg, y, m, pw, fmt) {
+  for (const t of y.ticks) {
+    const py = y.scale(t);
+    s('line', {x1: m.l, x2: m.l + pw, y1: py, y2: py, stroke: 'var(--grid)', 'stroke-width': 1, 'shape-rendering': 'crispEdges'}, svg);
+    s('text', {x: m.l - 8, y: py, 'text-anchor': 'end', 'dominant-baseline': 'middle', 'font-size': 11, fill: 'var(--muted)', style: {fontVariantNumeric: 'tabular-nums'}, text: fmt(t)}, svg);
+  }
+}
+
+function tooltip(host) {
+  let tip = host.querySelector(':scope > .tip');
+  if (!tip) {
+    tip = h('div', {class: 'tip', role: 'status'});
+    tip.hidden = true;
+    host.appendChild(tip);
+  }
+  return {
+    show(px, py, ...content) {
+      tip.replaceChildren(...content);
+      tip.hidden = false;
+      const hw = host.clientWidth, tw = tip.offsetWidth, th = tip.offsetHeight;
+      let left = px + 16;
+      if (left + tw > hw) left = Math.max(0, px - 16 - tw);
+      const top = Math.max(0, Math.min(py, host.clientHeight - th));
+      tip.style.left = left + 'px';
+      tip.style.top = top + 'px';
+    },
+    hide() { tip.hidden = true; },
+  };
+}
+
+function tipRows(rows) {
+  // rows: [{color, value, name, extra}]
+  return rows.map((r) => h('div', {class: 'row'},
+    h('span', {class: 'k', style: {background: r.color}}),
+    h('span', {class: 'v'}, r.value),
+    h('span', {class: 'n'}, r.name, r.extra ? h('i', {}, ' ' + r.extra) : null)));
+}
+
+function tipKv(pairs) {
+  return h('dl', {class: 'kv'}, pairs.flatMap(([k, v]) => [h('dt', {}, k), h('dd', {title: v}, v)]));
+}
+
+function legend(items, kind) {
+  const el = $('legend');
+  el.replaceChildren(...items.map((it) => h('span', {class: 'item'},
+    h('span', {class: kind === 'line' ? 'line-key' : 'dot-key', style: {background: it.color}}),
+    it.name)));
+}
+
+// runs of consecutive records on the same machine
+function hardwareRuns(records) {
+  const runs = [];
+  for (const r of records) {
+    const last = runs[runs.length - 1];
+    if (last && last.hw === r.hw) last.end = r;
+    else runs.push({hw: r.hw, start: r, end: r});
+  }
+  return runs;
+}
+
+// ---------------------------------------------------------------------------
+// line chart (over time / relative)
+
+function lineChart(host, {records, series, yLog, fmtAxis, fmtValue, refValue, refLabel, onPick}) {
+  const H = 400;
+  if (!records.length || !series.length) return emptyState(host, 'Select at least one language with data for this filter.');
+  const values = series.flatMap((sr) => sr.values.filter(Boolean).map((v) => v.y));
+  if (!values.length) return emptyState(host, 'No data for this selection.');
+  if (refValue != null) values.push(refValue);
+
+  const {svg, width} = frame(host, H);
+  const direct = series.length <= 4;
+  const labelW = direct ? Math.min(150, 26 + 6.8 * Math.max(...series.map((sr) => sr.name.length))) : 0;
+  const m = {l: 56, r: 14 + (width < 520 ? 0 : labelW), t: 30, b: 28};
+  const showDirect = direct && width >= 520;
+  const pw = width - m.l - m.r, ph = H - m.t - m.b;
+
+  let t0 = records[0].t, t1 = records[records.length - 1].t;
+  if (t1 - t0 < 864e5) { t0 -= 15 * 864e5; t1 += 15 * 864e5; }
+  const x = (t) => m.l + (t - t0) / (t1 - t0) * pw;
+  const y = makeY(values, yLog, m.t + ph, m.t);
+
+  // hardware bands
+  const runs = hardwareRuns(records);
+  runs.forEach((run, i) => {
+    const x0 = i === 0 ? m.l : x(run.start.t);
+    const x1 = i < runs.length - 1 ? x(runs[i + 1].start.t) : m.l + pw;
+    if (i % 2 === 1) s('rect', {x: x0, y: m.t, width: Math.max(0, x1 - x0), height: ph, fill: 'var(--band)'}, svg);
+    if (i > 0) s('line', {x1: x0, x2: x0, y1: m.t - 18, y2: m.t + ph, stroke: 'var(--axis)', 'stroke-width': 1, 'shape-rendering': 'crispEdges'}, svg);
+    const label = truncate(HW[run.hw].label, Math.floor((x1 - x0 - 10) / 6.2));
+    if (label) {
+      const t = s('text', {x: x0 + 6, y: m.t - 10, 'font-size': 11, fill: 'var(--muted)', text: label}, svg);
+      s('title', {text: HW[run.hw].full}, t);
+    }
+  });
+
+  drawYAxis(svg, y, m, pw, fmtAxis);
+  s('line', {x1: m.l, x2: m.l + pw, y1: m.t + ph, y2: m.t + ph, stroke: 'var(--axis)', 'stroke-width': 1, 'shape-rendering': 'crispEdges'}, svg);
+  for (const tk of timeTicks(t0, t1, Math.max(2, Math.floor(pw / 70)))) {
+    s('text', {x: x(tk.t), y: m.t + ph + 18, 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--muted)', text: tk.label}, svg);
+  }
+
+  if (refValue != null) {
+    const py = y.scale(refValue);
+    s('line', {x1: m.l, x2: m.l + pw, y1: py, y2: py, stroke: 'var(--ink-2)', 'stroke-width': 1.5}, svg);
+    s('text', {x: m.l + pw - 4, y: py - 6, 'text-anchor': 'end', 'font-size': 11, fill: 'var(--ink-2)', text: refLabel}, svg);
+  }
+
+  for (const sr of series) {
+    let d = '';
+    let pen = false;
+    sr.values.forEach((v, i) => {
+      if (!v) { pen = false; return; }
+      d += (pen ? 'L' : 'M') + x(records[i].t).toFixed(1) + ' ' + y.scale(v.y).toFixed(1);
+      pen = true;
+      const isolated = !sr.values[i - 1] && !sr.values[i + 1];
+      if (isolated) s('circle', {cx: x(records[i].t), cy: y.scale(v.y), r: 2.5, style: {fill: sr.color}}, svg);
+    });
+    s('path', {d, fill: 'none', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', style: {stroke: sr.color}}, svg);
+  }
+
+  if (showDirect) {
+    const ends = [];
+    for (const sr of series) {
+      for (let i = sr.values.length - 1; i >= 0; i--) {
+        if (sr.values[i]) { ends.push({sr, px: x(records[i].t), py: y.scale(sr.values[i].y)}); break; }
+      }
+    }
+    ends.sort((a, b) => a.py - b.py);
+    for (let i = 1; i < ends.length; i++) ends[i].py = Math.max(ends[i].py, ends[i - 1].py + 14);
+    for (let i = ends.length - 1; i >= 0; i--) {
+      const maxY = i === ends.length - 1 ? m.t + ph : ends[i + 1].py - 14;
+      ends[i].py = Math.min(ends[i].py, maxY);
+    }
+    for (const e of ends) {
+      const lx = m.l + pw + 8;
+      s('line', {x1: lx, x2: lx + 10, y1: e.py, y2: e.py, 'stroke-width': 2, 'stroke-linecap': 'round', style: {stroke: e.sr.color}}, svg);
+      s('text', {x: lx + 15, y: e.py, 'dominant-baseline': 'middle', 'font-size': 12, fill: 'var(--ink-2)', text: truncate(e.sr.name, 18)}, svg);
+    }
+  }
+
+  // crosshair + tooltip
+  const xs = records.map((r) => x(r.t));
+  const cross = s('line', {y1: m.t, y2: m.t + ph, stroke: 'var(--ink-2)', 'stroke-width': 1, visibility: 'hidden', 'pointer-events': 'none'}, svg);
+  const dots = s('g', {'pointer-events': 'none'}, svg);
+  const overlay = s('rect', {x: m.l, y: m.t, width: pw, height: ph, fill: 'transparent', tabindex: 0, role: 'img',
+    'aria-label': 'Chart. Use left and right arrow keys to move between snapshots.', style: {cursor: onPick ? 'pointer' : 'crosshair', outline: 'none'}}, svg);
+  const tip = tooltip(host);
+  let cur = -1;
+
+  function nearest(px) {
+    let lo = 0, hi = xs.length - 1;
+    while (hi - lo > 1) {
+      const mid = (lo + hi) >> 1;
+      if (xs[mid] < px) lo = mid; else hi = mid;
+    }
+    return Math.abs(xs[lo] - px) <= Math.abs(xs[hi] - px) ? lo : hi;
+  }
+
+  function show(i, py) {
+    cur = Math.max(0, Math.min(records.length - 1, i));
+    const r = records[cur];
+    const px = xs[cur];
+    cross.setAttribute('x1', px);
+    cross.setAttribute('x2', px);
+    cross.setAttribute('visibility', 'visible');
+    dots.replaceChildren();
+    const rows = [];
+    for (const sr of series) {
+      const v = sr.values[cur];
+      if (!v) continue;
+      s('circle', {cx: px, cy: y.scale(v.y), r: 4.5, stroke: 'var(--surface)', 'stroke-width': 2, style: {fill: sr.color}}, dots);
+      rows.push({color: sr.color, value: fmtValue(v.y), name: sr.name, extra: v.version, y: v.y});
+    }
+    rows.sort((a, b) => b.y - a.y);
+    tip.show(px, py ?? m.t,
+      h('div', {class: 'head'}, h('b', {}, r.dateStr.slice(0, 10)), ' · ', HW[r.hw].label),
+      ...(rows.length ? tipRows(rows) : [h('div', {class: 'muted'}, 'no data for selected languages')]),
+      h('div', {class: 'foot'}, 'commit ' + r.commit.slice(0, 7) + (onPick ? ' · click to open in ranking' : '')));
+  }
+
+  function hide() {
+    cross.setAttribute('visibility', 'hidden');
+    dots.replaceChildren();
+    tip.hide();
+  }
+
+  overlay.addEventListener('pointermove', (e) => {
+    const rect = svg.getBoundingClientRect();
+    show(nearest(e.clientX - rect.left), e.clientY - rect.top + 12);
+  });
+  overlay.addEventListener('pointerleave', hide);
+  overlay.addEventListener('blur', hide);
+  overlay.addEventListener('focus', () => show(cur < 0 ? records.length - 1 : cur));
+  overlay.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      show((cur < 0 ? records.length - 1 : cur) + (e.key === 'ArrowLeft' ? -1 : 1));
+    } else if (e.key === 'Enter' && onPick && cur >= 0) {
+      onPick(records[cur]);
+    } else if (e.key === 'Escape') {
+      hide();
+    }
+  });
+  if (onPick) overlay.addEventListener('click', () => { if (cur >= 0) onPick(records[cur]); });
+}
+
+// ---------------------------------------------------------------------------
+// dot + range chart on categorical x (versions, hardware)
+
+function dotRangeChart(host, {height, categories, series, yLog, catLabel, tipFor, connect, extraValues}) {
+  // categories: [{key, ...}], series: [{name, color, stats: Map(catKey -> {median,min,max})}]
+  // extraValues: values to include in the y-domain, for a shared scale across small multiples
+  const values = series.flatMap((sr) => [...sr.stats.values()].flatMap((st) => [st.min, st.max]));
+  if (!values.length) return emptyState(host, 'No data for this selection.');
+  if (extraValues) values.push(...extraValues);
+  const {svg, width} = frame(host, height);
+  const m = {l: 56, r: 12, t: 12, b: 40};
+  const pw = width - m.l - m.r, ph = height - m.t - m.b;
+  const y = makeY(values, yLog, m.t + ph, m.t);
+  const step = pw / categories.length;
+  drawYAxis(svg, y, m, pw, fmtShort);
+  s('line', {x1: m.l, x2: m.l + pw, y1: m.t + ph, y2: m.t + ph, stroke: 'var(--axis)', 'stroke-width': 1, 'shape-rendering': 'crispEdges'}, svg);
+
+  const labelEvery = Math.max(1, Math.ceil(categories.length * 46 / pw));
+  categories.forEach((c, i) => {
+    const cx = m.l + step * (i + 0.5);
+    if (i % labelEvery === 0) {
+      const lines = catLabel(c, Math.floor(Math.min(step * labelEvery, 260) / 6.4));
+      lines.forEach((line, j) => s('text', {x: cx, y: m.t + ph + 16 + j * 13, 'text-anchor': 'middle', 'font-size': j ? 10.5 : 11, fill: j ? 'var(--muted)' : 'var(--ink-2)', text: line}, svg));
+    }
+  });
+
+  const k = series.length;
+  const inner = Math.min(step * 0.7, k * 22);
+  const offset = (si) => k === 1 ? 0 : (si - (k - 1) / 2) * (inner / Math.max(1, k - 1));
+  const r = Math.max(2.5, Math.min(5, step / (k * 2.6)));
+  const tip = tooltip(host);
+  const hits = s('g', {}, null);
+
+  series.forEach((sr, si) => {
+    const pts = [];
+    categories.forEach((c, i) => {
+      const st = sr.stats.get(c.key);
+      if (!st) return;
+      pts.push({c, st, cx: m.l + step * (i + 0.5) + offset(si)});
+    });
+    if (connect && pts.length > 1) {
+      s('path', {d: pts.map((p, i) => (i ? 'L' : 'M') + p.cx.toFixed(1) + ' ' + y.scale(p.st.median).toFixed(1)).join(''),
+        fill: 'none', 'stroke-width': 1.5, 'stroke-opacity': 0.5, 'stroke-linejoin': 'round', style: {stroke: sr.color}}, svg);
+    }
+    for (const p of pts) {
+      if (p.st.max > p.st.min) {
+        s('line', {x1: p.cx, x2: p.cx, y1: y.scale(p.st.min), y2: y.scale(p.st.max), 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-opacity': 0.45, style: {stroke: sr.color}}, svg);
+      }
+      const dot = s('circle', {cx: p.cx, cy: y.scale(p.st.median), r, stroke: 'var(--surface)', 'stroke-width': 1.5, style: {fill: sr.color}}, svg);
+      const hitW = Math.max(12, Math.min(step, inner / Math.max(1, k - 1) || step));
+      const hit = s('rect', {x: p.cx - hitW / 2, y: m.t, width: hitW, height: ph, fill: 'transparent', tabindex: 0, style: {outline: 'none'}}, hits);
+      const on = () => {
+        dot.setAttribute('r', r + 2);
+        tip.show(p.cx, Math.max(0, y.scale(p.st.median) - 20), ...tipFor(sr, p.c, p.st));
+      };
+      const off = () => { dot.setAttribute('r', r); tip.hide(); };
+      hit.addEventListener('pointerenter', on);
+      hit.addEventListener('pointerleave', off);
+      hit.addEventListener('focus', on);
+      hit.addEventListener('blur', off);
+    }
+  });
+  svg.appendChild(hits);
+}
+
+// ---------------------------------------------------------------------------
+// aggregations
+
+function versionKey(version, gran) {
+  const v = (version || '').trim();
+  if (!v) return 'unknown';
+  if (gran === 'full') return v;
+  const m = v.match(/\d+(?:\.\d+)*/);
+  if (!m) return v;
+  const parts = m[0].split('.');
+  return gran === 'major' ? parts[0] : parts.slice(0, 2).join('.');
+}
+
+function autoGran(points) {
+  const majors = new Set(points.map((p) => versionKey(p.version, 'major')));
+  return majors.size >= 4 ? 'major' : 'minor';
+}
+
+function langPoints(name, records) {
+  const out = [];
+  for (const r of records) {
+    const v = r.langs[name];
+    if (v) out.push({r, rps: v[0], version: v[1]});
+  }
+  return out;
+}
+
+function stats(points) {
+  const vals = points.map((p) => p.rps);
+  return {
+    median: median(vals), min: Math.min(...vals), max: Math.max(...vals), n: vals.length,
+    first: points[0].r, last: points[points.length - 1].r,
+    versions: [...new Set(points.map((p) => p.version))],
+    hws: [...new Set(points.map((p) => p.r.hw))],
+  };
+}
+
+function versionGroups(name, records) {
+  const points = langPoints(name, records);
+  const gran = state.gran === 'auto' ? autoGran(points) : state.gran;
+  const groups = new Map();
+  for (const p of points) {
+    const key = versionKey(p.version, gran);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(p);
+  }
+  return {gran, groups: [...groups.entries()].map(([key, pts]) => ({key, ...stats(pts)}))};
+}
+
+// ---------------------------------------------------------------------------
+// table
+
+const tableSort = {};
+
+function renderTable(cols, rows, sortKey) {
+  const host = $('view-table');
+  if (!rows.length) { host.replaceChildren(); return; }
+  const st = tableSort[state.view] || (tableSort[state.view] = {key: sortKey || cols[0].key, dir: -1});
+  const col = cols.find((c) => c.key === st.key) || cols[0];
+  const sorted = [...rows].sort((a, b) => {
+    const va = a[col.key], vb = b[col.key];
+    if (va == null && vb == null) return 0;
+    if (va == null) return 1;
+    if (vb == null) return -1;
+    return (typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb))) * st.dir;
+  });
+  const thead = h('thead', {}, h('tr', {}, cols.map((c) => h('th', {class: c.num ? 'num' : null, 'aria-sort': c.key === st.key ? (st.dir > 0 ? 'ascending' : 'descending') : null},
+    h('button', {type: 'button', onclick: () => {
+      if (st.key === c.key) st.dir = -st.dir;
+      else { st.key = c.key; st.dir = c.num ? -1 : 1; }
+      renderTable(cols, rows, sortKey);
+    }}, c.label + (c.key === st.key ? (st.dir > 0 ? ' ↑' : ' ↓') : ''))))));
+  const tbody = h('tbody', {}, sorted.map((row) => h('tr', {}, cols.map((c) => {
+    const v = row[c.key];
+    const text = v == null ? '—' : c.fmt ? c.fmt(v, row) : String(v);
+    if (c.lang) return h('td', {}, h('span', {class: 'key', style: {background: color(row.lang)}}), text);
+    return h('td', {class: [c.num ? 'num' : '', c.dim ? 'dim' : ''].join(' ').trim() || null, title: c.title ? c.title(row) : null}, text);
+  }))));
+  host.replaceChildren(h('table', {}, thead, tbody));
+}
+
+// ---------------------------------------------------------------------------
+// views
+
+function selectedWithData(records) {
+  return state.selected.filter((name) => records.some((r) => r.langs[name]));
+}
+
+function renderTimeView(host) {
+  const records = filtered();
+  const names = selectedWithData(records);
+  const series = names.map((name) => ({
+    name, color: color(name),
+    values: records.map((r) => r.langs[name] ? {y: r.langs[name][0], version: r.langs[name][1]} : null),
+  }));
+  legend(series, 'line');
+  lineChart(host, {records, series, yLog: state.scale === 'log', fmtAxis: fmtShort, fmtValue: fmtFull, onPick: pickSnapshot});
+
+  renderTable([
+    {key: 'lang', label: 'Language', lang: true},
+    {key: 'n', label: 'Snapshots', num: true},
+    {key: 'firstDate', label: 'First', dim: true},
+    {key: 'firstRps', label: 'First rps', num: true, fmt: fmtFull, title: (r) => 'version ' + r.firstVersion},
+    {key: 'lastDate', label: 'Latest', dim: true},
+    {key: 'lastRps', label: 'Latest rps', num: true, fmt: fmtFull, title: (r) => 'version ' + r.lastVersion},
+    {key: 'lastVersion', label: 'Latest version'},
+    {key: 'bestRps', label: 'Best rps', num: true, fmt: fmtFull, title: (r) => r.bestVersion + ' at ' + r.bestDate},
+    {key: 'change', label: 'Latest ÷ first', num: true, fmt: fmtRatio},
+  ], names.map((name) => {
+    const pts = langPoints(name, records);
+    const first = pts[0], last = pts[pts.length - 1];
+    const best = pts.reduce((a, b) => (b.rps > a.rps ? b : a));
+    return {
+      lang: name, n: pts.length,
+      firstDate: first.r.dateStr.slice(0, 10), firstRps: first.rps, firstVersion: first.version,
+      lastDate: last.r.dateStr.slice(0, 10), lastRps: last.rps, lastVersion: last.version || null,
+      bestRps: best.rps, bestVersion: best.version, bestDate: best.r.dateStr.slice(0, 10),
+      change: last.rps / first.rps,
+    };
+  }), 'lastRps');
+}
+
+function renderRelativeView(host) {
+  const records = filtered();
+  const options = LANGS.filter((l) => records.some((r) => r.langs[l.name])).map((l) => l.name);
+  if (!options.includes(state.base)) state.base = options.includes('C clang') ? 'C clang' : options[0];
+  $('view-options').replaceChildren(h('label', {class: 'field'}, h('span', {}, 'Baseline'),
+    h('select', {onchange: (e) => { state.base = e.target.value; render(); }},
+      options.map((name) => h('option', {value: name, selected: name === state.base}, name)))));
+
+  const base = state.base;
+  const names = selectedWithData(records).filter((name) => name !== base);
+  const series = names.map((name) => ({
+    name, color: color(name),
+    values: records.map((r) => (r.langs[name] && r.langs[base]) ? {y: r.langs[name][0] / r.langs[base][0], version: r.langs[name][1]} : null),
+  })).filter((sr) => sr.values.some(Boolean));
+  legend(series, 'line');
+  lineChart(host, {records, series, yLog: true, fmtAxis: fmtRatioTick, fmtValue: fmtRatio, refValue: 1, refLabel: base + ' = 1×', onPick: pickSnapshot});
+
+  renderTable([
+    {key: 'lang', label: 'Language', lang: true},
+    {key: 'n', label: 'Snapshots', num: true},
+    {key: 'first', label: 'First ratio', num: true, fmt: fmtRatio},
+    {key: 'last', label: 'Latest ratio', num: true, fmt: fmtRatio},
+    {key: 'min', label: 'Min', num: true, fmt: fmtRatio},
+    {key: 'max', label: 'Max', num: true, fmt: fmtRatio},
+    {key: 'firstDate', label: 'Since', dim: true},
+  ], series.map((sr) => {
+    const vals = sr.values.map((v, i) => v && {y: v.y, r: records[i]}).filter(Boolean);
+    return {
+      lang: sr.name, n: vals.length, first: vals[0].y, last: vals[vals.length - 1].y,
+      min: Math.min(...vals.map((v) => v.y)), max: Math.max(...vals.map((v) => v.y)),
+      firstDate: vals[0].r.dateStr.slice(0, 10),
+    };
+  }), 'last');
+}
+
+function renderVersionView(host) {
+  $('view-options').replaceChildren(h('label', {class: 'field'}, h('span', {}, 'Group versions'),
+    h('select', {onchange: (e) => { state.gran = e.target.value; render(); }},
+      [['auto', 'Auto'], ['major', 'Major (22)'], ['minor', 'Major.minor (1.22)'], ['full', 'Full version']]
+        .map(([v, label]) => h('option', {value: v, selected: v === state.gran}, label)))));
+
+  const records = filtered();
+  const names = selectedWithData(records);
+  legend(names.map((name) => ({name, color: color(name)})), 'dot');
+  host.replaceChildren();
+  if (!names.length) return emptyState(host, 'Select at least one language with data for this filter.');
+
+  const all = names.map((name) => ({name, ...versionGroups(name, records)}));
+  // share one y-domain across panels, so panels are comparable
+  const allValues = all.flatMap((p) => p.groups.flatMap((g) => [g.min, g.max]));
+  const domain = {min: Math.min(...allValues), max: Math.max(...allValues)};
+  const rows = [];
+
+  for (const panel of all) {
+    const granLabel = {major: 'major', minor: 'major.minor', full: 'full'}[panel.gran];
+    const box = h('div', {class: 'panel'},
+      h('div', {class: 'panel-title'}, h('span', {class: 'dot', style: {background: color(panel.name)}}), h('b', {}, panel.name),
+        h('span', {class: 'muted'}, `${panel.groups.length} version group${panel.groups.length === 1 ? '' : 's'} · by ${granLabel}`)));
+    const chart = h('div', {class: 'chart'});
+    box.appendChild(chart);
+    host.appendChild(box);
+    dotRangeChart(chart, {
+      height: 190, categories: panel.groups.map((g) => ({key: g.key})), extraValues: [domain.min, domain.max],
+      series: [{name: panel.name, color: color(panel.name), stats: new Map(panel.groups.map((g) => [g.key, g]))}],
+      yLog: state.scale === 'log', connect: true,
+      catLabel: (c, maxChars) => [truncate(c.key, maxChars)],
+      tipFor: (sr, c, st) => [
+        h('div', {class: 'head'}, h('b', {}, sr.name + ' ' + c.key)),
+        tipKv([
+          ['median', fmtFull(st.median) + ' rps'],
+          ['min – max', fmtShort(st.min) + ' – ' + fmtShort(st.max)],
+          ['snapshots', String(st.n)],
+          ['period', st.first.dateStr.slice(0, 10) + ' … ' + st.last.dateStr.slice(0, 10)],
+          ['versions', truncate(st.versions.join(', '), 80)],
+          ['hardware', st.hws.map((id) => HW[id].label).join('; ')],
+        ]),
+      ],
+    });
+    for (const g of panel.groups) {
+      rows.push({lang: panel.name, version: g.key, n: g.n, firstDate: g.first.dateStr.slice(0, 10), median: g.median, min: g.min, max: g.max,
+        hardware: g.hws.map((id) => HW[id].label).join('; ')});
+    }
+  }
+
+  renderTable([
+    {key: 'lang', label: 'Language', lang: true},
+    {key: 'version', label: 'Version'},
+    {key: 'firstDate', label: 'First seen', dim: true},
+    {key: 'n', label: 'Snapshots', num: true},
+    {key: 'median', label: 'Median rps', num: true, fmt: fmtFull},
+    {key: 'min', label: 'Min rps', num: true, fmt: fmtFull},
+    {key: 'max', label: 'Max rps', num: true, fmt: fmtFull},
+    {key: 'hardware', label: 'Hardware', dim: true},
+  ], rows, 'firstDate');
+}
+
+function renderHardwareView(host) {
+  const names = selectedWithData(RECORDS);
+  const hwIds = [...new Set(RECORDS.map((r) => r.hw))];
+  const series = names.map((name) => {
+    const pts = langPoints(name, RECORDS);
+    const map = new Map();
+    for (const id of hwIds) {
+      const p = pts.filter((pt) => pt.r.hw === id);
+      if (p.length) map.set(id, stats(p));
+    }
+    return {name, color: color(name), stats: map};
+  });
+  legend(series, 'dot');
+  if (!series.length) return emptyState(host, 'Select at least one language.');
+
+  dotRangeChart(host, {
+    height: 400, yLog: state.scale === 'log', connect: true,
+    categories: hwIds.map((id) => ({key: id, hw: HW[id]})),
+    series,
+    catLabel: (c, maxChars) => [truncate(c.hw.label, maxChars), yearOf(c.hw.first) + '–' + yearOf(c.hw.last)],
+    tipFor: (sr, c, st) => [
+      h('div', {class: 'head'}, h('b', {}, sr.name), ' · ', c.hw.label),
+      tipKv([
+        ['median', fmtFull(st.median) + ' rps'],
+        ['min – max', fmtShort(st.min) + ' – ' + fmtShort(st.max)],
+        ['snapshots', String(st.n)],
+        ['period', st.first.dateStr.slice(0, 10) + ' … ' + st.last.dateStr.slice(0, 10)],
+        ['versions', truncate(st.versions[0] + (st.versions.length > 1 ? ' … ' + st.versions[st.versions.length - 1] : ''), 60)],
+      ]),
+    ],
+  });
+
+  const cols = [{key: 'lang', label: 'Language', lang: true}];
+  hwIds.forEach((id) => cols.push({key: 'hw' + id, label: truncate(HW[id].label, 28), num: true, fmt: fmtFull,
+    title: (r) => r['n' + id] ? `${r['n' + id]} snapshots, ${HW[id].full}` : null}));
+  cols.push({key: 'speedup', label: 'Last ÷ first machine', num: true, fmt: fmtRatio});
+  renderTable(cols, series.map((sr) => {
+    const row = {lang: sr.name};
+    const meds = [];
+    for (const id of hwIds) {
+      const st = sr.stats.get(id);
+      if (st) { row['hw' + id] = st.median; row['n' + id] = st.n; meds.push(st.median); }
+    }
+    row.speedup = meds.length > 1 ? meds[meds.length - 1] / meds[0] : null;
+    return row;
+  }), 'hw' + hwIds[hwIds.length - 1]);
+}
+
+// ---------------------------------------------------------------------------
+// ranking at a snapshot
+
+let playTimer = null;
+
+function pickSnapshot(record) {
+  const recs = filtered();
+  const idx = recs.indexOf(record);
+  if (idx >= 0) {
+    state.snap = idx;
+    renderRanking();
+    $('ranking').scrollIntoView({behavior: 'smooth', block: 'nearest'});
+  }
+}
+
+function rankingDomain(records) {
+  let min = Infinity, max = 0;
+  for (const r of records) for (const [rps] of Object.values(r.langs)) { min = Math.min(min, rps); max = Math.max(max, rps); }
+  return [min, max];
+}
+
+function renderRanking() {
+  const records = filtered();
+  if (state.snap < 0 || state.snap >= records.length) state.snap = records.length - 1;
+  const slider = $('snap');
+  slider.max = records.length - 1;
+  slider.value = state.snap;
+  const rec = records[state.snap];
+  const url = commitUrl(rec.commit);
+  $('rank-meta').replaceChildren(
+    h('b', {}, rec.dateStr), ' · ', HW[rec.hw].label, ' · commit ',
+    url ? h('a', {href: url, target: '_blank', rel: 'noopener'}, rec.commit.slice(0, 7)) : rec.commit.slice(0, 7),
+    h('span', {class: 'muted'}, ` · snapshot ${state.snap + 1} of ${records.length}`));
+
+  const host = $('ranking');
+  const rows = Object.entries(rec.langs).map(([name, [rps, version]]) => ({name, rps, version})).sort((a, b) => b.rps - a.rps);
+  const rowH = 22;
+  const m = {l: 150, r: 84, t: 8, b: 26};
+  const H = m.t + rows.length * rowH + m.b;
+  const {svg, width} = frame(host, H);
+  const pw = Math.max(40, width - m.l - m.r);
+  const [dmin, dmax] = rankingDomain(records);
+  const log = state.scale === 'log';
+  const l0 = Math.log10(dmin) - 0.1, l1 = Math.log10(dmax) + 0.05;
+  const x = log ? (v) => m.l + (Math.log10(v) - l0) / (l1 - l0) * pw : (v) => m.l + v / (dmax * 1.02) * pw;
+  const ticks = log ? (() => { const t = []; for (let e = Math.ceil(l0); e <= Math.floor(l1); e++) t.push(10 ** e); return t; })()
+    : makeY([0, dmax * 1.02], false, 0, 1).ticks.filter((t) => t <= dmax * 1.02);
+  const minGap = 46;
+  let lastX = -Infinity;
+  for (const t of ticks) {
+    const px = x(t);
+    s('line', {x1: px, x2: px, y1: m.t, y2: H - m.b, stroke: 'var(--grid)', 'stroke-width': 1, 'shape-rendering': 'crispEdges'}, svg);
+    if (px - lastX >= minGap) {
+      s('text', {x: px, y: H - m.b + 16, 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--muted)', text: fmtShort(t)}, svg);
+      lastX = px;
+    }
+  }
+
+  rows.forEach((row, i) => {
+    const cy = m.t + i * rowH + rowH / 2;
+    const selected = state.selected.includes(row.name);
+    const disabled = !selected && state.selected.length >= MAX_SELECTED;
+    const g = s('g', {tabindex: 0, role: 'button', 'aria-pressed': String(selected), 'aria-label': `${row.name}: ${fmtFull(row.rps)} rps, version ${row.version || 'unknown'}`, style: {cursor: disabled ? 'not-allowed' : 'pointer', outline: 'none'}}, svg);
+    const bg = s('rect', {x: 0, y: cy - rowH / 2, width, height: rowH, rx: 4, fill: 'transparent'}, g);
+    s('title', {text: `${row.name} ${row.version || ''}\n${fmtFull(row.rps)} rps`}, g);
+    s('text', {x: 6, y: cy, 'dominant-baseline': 'middle', 'font-size': 11, fill: 'var(--muted)', style: {fontVariantNumeric: 'tabular-nums'}, text: String(i + 1)}, g);
+    s('text', {x: 28, y: cy, 'dominant-baseline': 'middle', 'font-size': 12.5, 'font-weight': selected ? 600 : 400, fill: selected ? 'var(--ink)' : 'var(--ink-2)', text: truncate(row.name, 16)}, g);
+    s('line', {x1: m.l, x2: x(row.rps), y1: cy, y2: cy, stroke: 'var(--grid)', 'stroke-width': 1}, g);
+    s('circle', {cx: x(row.rps), cy, r: selected ? 5.5 : 4, stroke: 'var(--surface)', 'stroke-width': 1.5, style: {fill: selected ? color(row.name) : 'var(--muted)'}}, g);
+    s('text', {x: width - 6, y: cy, 'text-anchor': 'end', 'dominant-baseline': 'middle', 'font-size': 12, fill: selected ? 'var(--ink)' : 'var(--ink-2)', style: {fontVariantNumeric: 'tabular-nums'}, text: fmtShort(row.rps)}, g);
+    g.addEventListener('pointerenter', () => bg.setAttribute('fill', 'var(--hover)'));
+    g.addEventListener('pointerleave', () => bg.setAttribute('fill', 'transparent'));
+    const act = () => { if (!disabled) toggle(row.name); };
+    g.addEventListener('click', act);
+    g.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act(); } });
+  });
+}
+
+function stopPlay() {
+  if (playTimer) clearInterval(playTimer);
+  playTimer = null;
+  $('play').textContent = '▶ Play';
+}
+
+$('play').addEventListener('click', () => {
+  if (playTimer) return stopPlay();
+  const records = filtered();
+  if (state.snap >= records.length - 1) state.snap = 0;
+  $('play').textContent = '❚❚ Pause';
+  playTimer = setInterval(() => {
+    if (state.snap >= filtered().length - 1) return stopPlay();
+    state.snap++;
+    renderRanking();
+  }, 140);
+});
+
+$('snap').addEventListener('input', (e) => {
+  stopPlay();
+  state.snap = +e.target.value;
+  renderRanking();
+});
+
+// ---------------------------------------------------------------------------
+// page sections
+
+function renderSubtitle() {
+  const first = RECORDS[0], last = LAST_RECORD;
+  $('subtitle').replaceChildren(
+    `How fast ${LANG_INFO.size} languages compute factorials, collected from ${RECORDS.length} README.md snapshots between ${first.dateStr.slice(0, 10)} and ${last.dateStr.slice(0, 10)}. `,
+    'Speed is in rps — factorial calculations per second, higher is faster.');
+  const repo = DATA.repo;
+  $('footer').replaceChildren(
+    'Data: build/history.jsonl, collected by ', h('code', {}, 'build/create-report.pl --collect-history'), ' from git history of README.md. ',
+    repo ? h('a', {href: repo}, 'Source repository') : null, '.');
+}
+
+function renderKpis() {
+  const records = filtered();
+  const langs = new Set(records.flatMap((r) => Object.keys(r.langs)));
+  const last = records[records.length - 1];
+  const [fastName, [fastRps, fastVer]] = Object.entries(last.langs).sort((a, b) => b[1][0] - a[1][0])[0];
+  const hws = new Set(records.map((r) => r.hw));
+  const tile = (label, value, note) => h('div', {class: 'kpi'}, h('div', {class: 'label'}, label), h('div', {class: 'value', title: value}, value), h('div', {class: 'note', title: note}, note));
+  $('kpis').replaceChildren(
+    tile('Snapshots', String(records.length), 'commits with changed results'),
+    tile('Languages', String(langs.size), `${Object.keys(last.langs).length} in the latest snapshot`),
+    tile('Period', yearOf(records[0]) + '–' + yearOf(last), `${records[0].dateStr.slice(0, 10)} … ${last.dateStr.slice(0, 10)}`),
+    tile('Machines', String(hws.size), state.hw === 'all' ? 'hardware changed ' + (hardwareRuns(records).length - 1) + ' times' : HW[+state.hw].label),
+    tile('Fastest now', fastName, `${fmtShort(fastRps)} rps${fastVer ? ' · ' + fastVer : ''}`),
+  );
+}
+
+function renderFilters() {
+  const sel = $('hw-filter');
+  sel.replaceChildren(h('option', {value: 'all'}, `All machines (${RECORDS.length})`),
+    ...HW.map((hw) => h('option', {value: String(hw.id), title: hw.full}, `${truncate(hw.label, 36)} · ${yearOf(hw.first)}–${yearOf(hw.last)} (${hw.count})`)));
+  sel.value = state.hw;
+  for (const b of $('scale-seg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.scale === state.scale));
+}
+
+function renderPicker() {
+  const records = filtered();
+  const present = new Set(records.flatMap((r) => Object.keys(r.langs)));
+  const q = state.search.trim().toLowerCase();
+  const full = state.selected.length >= MAX_SELECTED;
+  $('chips').replaceChildren(...LANGS.filter((l) => !q || l.name.toLowerCase().includes(q)).map((l) => {
+    const selected = state.selected.includes(l.name);
+    const disabled = !selected && full;
+    const absent = !present.has(l.name);
+    return h('button', {
+      type: 'button', class: 'chip', 'aria-pressed': String(selected), 'aria-disabled': disabled ? 'true' : null,
+      title: `${l.name}: ${l.first.dateStr.slice(0, 10)} … ${l.last.dateStr.slice(0, 10)}, ${l.n} snapshots` + (absent ? ' (no data for this hardware)' : ''),
+      style: absent && !selected ? {opacity: 0.45} : null,
+      onclick: () => { if (!disabled) toggle(l.name); },
+    }, selected ? h('span', {class: 'dot', style: {background: color(l.name)}}) : null, l.name,
+    !l.active ? h('span', {class: 'tag'}, '–' + yearOf(l.last)) : null);
+  }));
+  $('picker-note').textContent = `${state.selected.length} of ${MAX_SELECTED} selected` + (full ? ' — remove one to add another' : '') +
+    '. Languages marked “–year” are no longer measured.';
+}
+
+function renderView() {
+  for (const b of $('tabs').querySelectorAll('button')) b.setAttribute('aria-selected', String(b.dataset.view === state.view));
+  $('view-title').textContent = VIEWS[state.view].title;
+  $('view-hint').textContent = VIEWS[state.view].hint;
+  $('view-options').replaceChildren();
+  $('view-table').replaceChildren();
+  const host = $('chart');
+  if (state.view === 'time') renderTimeView(host);
+  else if (state.view === 'relative') renderRelativeView(host);
+  else if (state.view === 'version') renderVersionView(host);
+  else renderHardwareView(host);
+}
+
+function render() {
+  renderFilters();
+  renderKpis();
+  renderPicker();
+  renderView();
+  renderRanking();
+  writeHash();
+}
+
+// ---------------------------------------------------------------------------
+// events
+
+$('hw-filter').addEventListener('change', (e) => { stopPlay(); state.hw = e.target.value; state.snap = -1; render(); });
+$('scale-seg').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (b) { state.scale = b.dataset.scale; render(); }
+});
+$('tabs').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (b) { state.view = b.dataset.view; render(); }
+});
+$('lang-search').addEventListener('input', (e) => { state.search = e.target.value; renderPicker(); });
+$('clear-langs').addEventListener('click', () => { setSelection([]); render(); });
+$('presets').replaceChildren(...PRESETS.map((p) => h('button', {type: 'button', class: 'btn', onclick: () => { setSelection(p.langs()); render(); }}, p.label)));
+
+$('theme-toggle').addEventListener('click', () => {
+  const dark = getComputedStyle(document.documentElement).colorScheme === 'dark';
+  const next = dark ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  storageSet('theme', next);
+});
+const savedTheme = storageGet('theme');
+if (savedTheme === 'light' || savedTheme === 'dark') document.documentElement.dataset.theme = savedTheme;
+
+let resizeFrame = 0;
+let lastWidth = 0;
+new ResizeObserver(() => {
+  const w = document.querySelector('.wrap').clientWidth;
+  if (w === lastWidth) return;
+  lastWidth = w;
+  cancelAnimationFrame(resizeFrame);
+  resizeFrame = requestAnimationFrame(() => { renderView(); renderRanking(); });
+}).observe(document.querySelector('.wrap'));
+
+readHash();
+renderSubtitle();
+render();
+})();
+</script>
+</body>
+</html>

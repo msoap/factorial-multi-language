@@ -1,6 +1,8 @@
 Comparison of languages for speed by calculation of factorial in different languages
 ====================================================================================
 
+History of results over all versions and hardware: [interactive dashboard](https://msoap.github.io/factorial-multi-language/)
+
 Hardware:
 ---------
 Apple M1 Pro / 3.2 GHz / 8 Cores

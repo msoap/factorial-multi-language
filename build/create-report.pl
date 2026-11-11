@@ -2,17 +2,22 @@
 
 =head1
 
+All paths are relative to the repository root (parent of build/), script can be run from any directory.
+
 Calculate stat:
-    ./create-report.pl --calc
+    build/create-report.pl --calc
 
 Calculate stat without cache:
-    CACHE_NO=1 ./create-report.pl --calc
+    CACHE_NO=1 build/create-report.pl --calc
 
 Create report:
-	./create-report.pl --create
+	build/create-report.pl --create
 
-Collect statistics from git history of README.md into history.jsonl:
-	./create-report.pl --collect-history
+Collect statistics from git history of README.md into build/history.jsonl:
+	build/create-report.pl --collect-history
+
+Create dashboard docs/index.html from build/history.jsonl (for GitHub Pages):
+	build/create-report.pl --create-history-report
 
 =cut
 
@@ -20,15 +25,29 @@ use v5.10;
 use strict;
 use warnings;
 
+use FindBin qw/$Bin/;
 use Time::HiRes qw/gettimeofday tv_interval/;
 use List::Util qw/max min/;
 use URI::Escape;
 use Data::Dumper;
 use JSON::PP;
 
+chdir "$Bin/.." or die "Error chdir to repository root: $!\n";
+
+our $build_dir = 'build';
 our $report_data = 'report.dat';
 our $report_markdown = 'README.md';
-our $history_jsonl = 'history.jsonl';
+our $hardware_info = "$build_dir/hardware.txt";
+our $history_jsonl = "$build_dir/history.jsonl";
+our $history_report_template = "$build_dir/history-report.tmpl.html";
+our $history_report_dir = 'docs';
+our $history_report_url = 'https://msoap.github.io/factorial-multi-language/';
+# languages renamed in README over time, it was always Apple clang
+our %history_lang_aliases = (
+    'C'         => 'C clang',
+    'C gcc -O1' => 'C clang -O1',
+    'C gcc -O2' => 'C clang -O2',
+);
 our $COUNT_EXEC_EACH_LANG = 10;
 our $MAX_GOOGLE_CHART_API_SQUARE = 300_000; # maximum square of google chart
 
@@ -337,19 +356,27 @@ commits without changes in speed are skipped.
 
 =cut
 
+sub load_history {
+    my $json = JSON::PP->new->utf8;
+    my @records;
+
+    open my $FH, '<:raw', $history_jsonl or return [];
+    while (my $line = <$FH>) {
+        next unless $line =~ /\S/;
+        my $record = eval {$json->decode($line)};
+        die "$history_jsonl:$.: invalid JSON: $@" unless $record;
+        push @records, $record;
+    }
+    close $FH;
+
+    return \@records;
+}
+
+# ------------------------------------------------------------------------------
 sub collect_history {
     my $json = JSON::PP->new->utf8->canonical;
 
-    my %saved;
-    if (open my $FH, '<:raw', $history_jsonl) {
-        while (my $line = <$FH>) {
-            next unless $line =~ /\S/;
-            my $record = eval {$json->decode($line)};
-            die "$history_jsonl:$.: invalid JSON: $@" unless $record;
-            $saved{$record->{commit}} = $record;
-        }
-        close $FH;
-    }
+    my %saved = map {$_->{commit} => $_} @{load_history()};
 
     open my $GIT, '-|', 'git', 'log', '--reverse', '--format=%H %cd', '--date=format:%Y-%m-%d %H:%M:%S', '--', $report_markdown
         or die "Error run git: $!\n";
@@ -394,11 +421,73 @@ sub collect_history {
 }
 
 # ------------------------------------------------------------------------------
+
+=head2 create_history_report
+
+Create static dashboard docs/index.html from history.jsonl:
+data is embedded into history-report.tmpl.html, without external dependencies.
+
+=cut
+
+sub create_history_report {
+    my @records = sort {$a->{date} cmp $b->{date}} @{load_history()};
+    die "$history_jsonl is empty, run: $0 --collect-history\n" unless @records;
+
+    my (%hardware_idx, @hardware, @data);
+    for my $record (@records) {
+        my $hardware = $record->{hardware};
+        unless (exists $hardware_idx{$hardware}) {
+            push @hardware, $hardware;
+            $hardware_idx{$hardware} = $#hardware;
+        }
+
+        my %languages;
+        for my $name (keys %{$record->{languages}}) {
+            my $alias = $history_lang_aliases{$name};
+            $alias = $name unless defined $alias && ! exists $record->{languages}{$alias};
+            $languages{$alias} = [@{$record->{languages}{$name}}{qw/rps version/}];
+        }
+
+        push @data, [$record->{date}, $record->{commit}, $hardware_idx{$hardware}, \%languages];
+    }
+
+    my $repo_url = qx/git config --get remote.origin.url/ // '';
+    chomp $repo_url;
+    $repo_url =~ s{^git\@github\.com:}{https://github.com/};
+    $repo_url =~ s{\.git$}{};
+    $repo_url = '' unless $repo_url =~ m{^https://};
+
+    my $json = JSON::PP->new->canonical->encode({repo => $repo_url, hardware => \@hardware, records => \@data});
+    $json =~ s{</}{<\\/}g; # safe for embedding into <script>
+
+    open my $TMPL, '<:encoding(UTF-8)', $history_report_template or die "Error open file $history_report_template: $!\n";
+    my $html = join '', <$TMPL>;
+    close $TMPL;
+    $html =~ s{/\*HISTORY_DATA\*/null}{$json} or die "$history_report_template: data placeholder not found\n";
+
+    mkdir $history_report_dir unless -d $history_report_dir;
+    open my $FHR, '>:encoding(UTF-8)', "$history_report_dir/index.html" or die "Error open file: $!\n";
+    print $FHR $html;
+    close $FHR;
+
+    # serve docs/ as is, without Jekyll processing on GitHub Pages
+    open my $NOJEKYLL, '>', "$history_report_dir/.nojekyll" or die "Error open file: $!\n";
+    close $NOJEKYLL;
+
+    printf "%s/index.html: %d snapshots, %d hardware\n", $history_report_dir, scalar(@data), scalar(@hardware);
+}
+
+# ------------------------------------------------------------------------------
 sub main {
-    die "$0 [ --help | --calc | --create | --collect-history ]\n" if $ARGV[0] && $ARGV[0] eq '--help';
+    die "$0 [ --help | --calc | --create | --collect-history | --create-history-report ]\n" if $ARGV[0] && $ARGV[0] eq '--help';
 
     if (@ARGV && $ARGV[0] eq '--collect-history') {
         collect_history();
+        return;
+    }
+
+    if (@ARGV && $ARGV[0] eq '--create-history-report') {
+        create_history_report();
         return;
     }
 
@@ -413,8 +502,9 @@ sub main {
         $result_report_md .= create_report('for slow languages', grep => sub () {$is_fast{$_[0]} ? 0 : 1});
 
         my $report_vars = {
-            hardware => `cat hardware.txt`
+            hardware => `cat $hardware_info`
             , report => $result_report_md
+            , history_report_url => $history_report_url
         };
         my $report_tmpl =  join("", <DATA>);
         $report_tmpl =~ s/\$(\w+)/$report_vars->{$1}/g;
@@ -431,6 +521,8 @@ main();
 __DATA__
 Comparison of languages for speed by calculation of factorial in different languages
 ====================================================================================
+
+History of results over all versions and hardware: [interactive dashboard]($history_report_url)
 
 Hardware:
 ---------

@@ -1,15 +1,22 @@
+REPORT = ./build/create-report.pl
+
 all:
-	./create-report.pl --calc
-	./create-report.pl --create
+	$(REPORT) --calc
+	$(REPORT) --create
 
 calc:
-	./create-report.pl --calc
+	$(REPORT) --calc
 
 create-report:
-	./create-report.pl --create
+	$(REPORT) --create
 
 calc_without_cache:
-	env CACHE_NO=1 ./create-report.pl --calc
+	env CACHE_NO=1 $(REPORT) --calc
 
 collect-history:
-	./create-report.pl --collect-history
+	$(REPORT) --collect-history
+
+create-history-report:
+	$(REPORT) --create-history-report
+
+history: collect-history create-history-report
